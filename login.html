@@ -906,16 +906,32 @@
         }
 
         // ── GOOGLE SIGN-IN ─────────────────────────────────────────────
-        // Set your Google OAuth Client ID here (or fetch from /api/admin/settings)
-        const GID = 'REPLACE_WITH_GOOGLE_CLIENT_ID';
+        let GID = '';
+
+        // Fetch Google Client ID from server
+        (async function loadGoogleConfig() {
+            try {
+                const res = await fetch('/api/public-config.php');
+                const data = await res.json();
+                if (data.ok && data.data.google_client_id) {
+                    GID = data.data.google_client_id;
+                    // Initialize Google Sign-In if library is loaded and ID is valid
+                    if (typeof google !== 'undefined' && GID && !GID.includes('CHANGE_THIS')) {
+                        google.accounts.id.initialize({ client_id: GID, callback: onGoogleToken });
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not load Google Client ID:', e);
+            }
+        })();
 
         window.onGoogleLibraryLoad = () => {
-            if (!GID || GID.includes('REPLACE')) return;
+            if (!GID || GID.includes('CHANGE_THIS')) return;
             google.accounts.id.initialize({ client_id: GID, callback: onGoogleToken });
         };
 
         function signInWithGoogle() {
-            if (!GID || GID.includes('REPLACE')) {
+            if (!GID || GID.includes('CHANGE_THIS')) {
                 return showMsg('Google Sign-In not configured on this server yet.', 'err');
             }
             google.accounts.id.prompt();
