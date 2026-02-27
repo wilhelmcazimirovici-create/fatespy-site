@@ -907,32 +907,46 @@
 
         // ── GOOGLE SIGN-IN ─────────────────────────────────────────────
         let GID = '';
+        let googleConfigLoaded = false;
 
         // Fetch Google Client ID from server
         (async function loadGoogleConfig() {
             try {
                 const res = await fetch('/api/public-config.php');
                 const data = await res.json();
+                console.log('Public config loaded:', data);
                 if (data.ok && data.data.google_client_id) {
                     GID = data.data.google_client_id;
+                    console.log('Google Client ID:', GID);
+                    googleConfigLoaded = true;
                     // Initialize Google Sign-In if library is loaded and ID is valid
                     if (typeof google !== 'undefined' && GID && !GID.includes('CHANGE_THIS')) {
                         google.accounts.id.initialize({ client_id: GID, callback: onGoogleToken });
+                        console.log('Google Sign-In initialized');
                     }
                 }
             } catch (e) {
-                console.warn('Could not load Google Client ID:', e);
+                console.error('Could not load Google Client ID:', e);
+                googleConfigLoaded = true;
             }
         })();
 
         window.onGoogleLibraryLoad = () => {
+            console.log('Google library loaded, GID:', GID);
             if (!GID || GID.includes('CHANGE_THIS')) return;
             google.accounts.id.initialize({ client_id: GID, callback: onGoogleToken });
         };
 
         function signInWithGoogle() {
+            console.log('signInWithGoogle called, GID:', GID, 'loaded:', googleConfigLoaded);
+            if (!googleConfigLoaded) {
+                return showMsg('Please wait, loading Google Sign-In...', 'err');
+            }
             if (!GID || GID.includes('CHANGE_THIS')) {
                 return showMsg('Google Sign-In not configured on this server yet.', 'err');
+            }
+            if (typeof google === 'undefined') {
+                return showMsg('Google Sign-In library not loaded.', 'err');
             }
             google.accounts.id.prompt();
         }
