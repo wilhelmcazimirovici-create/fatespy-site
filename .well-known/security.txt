@@ -1,0 +1,7 @@
+Contact: mailto:security@fatespy.com
+Preferred-Languages: en, ro
+Canonical: https://fatespy.com/.well-known/security.txt
+Policy: https://fatespy.com/security-policy.html
+Acknowledgments: https://fatespy.com/security-acknowledgments.html
+Encryption: https://fatespy.com/pgp-key.txt
+Expires: 2027-01-01T00:00:00.000Z

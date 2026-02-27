@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Personal Horoscope &mdash; FateSpy.com</title>
+    <meta name="description"
+        content="Your AI-generated personal horoscope based on your exact birth date, time and place." />
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="icon" href="/assets/images/favicon.webp" type="image/webp" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-deep: #07071a;
+            --bg-card: rgba(16, 18, 50, 0.75);
+            --accent-gold: #d4a853;
+            --accent-purple: #8b5cf6;
+            --accent-purple-l: #a78bfa;
+            --text-primary: #f0f0ff;
+            --text-secondary: rgba(240, 240, 255, 0.65);
+            --border-glass: 1px solid rgba(255, 255, 255, 0.08);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .page-header {
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: var(--border-glass);
+            background: rgba(7, 7, 26, 0.92);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-link {
+            font-family: 'Cinzel', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-link img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 7px 14px;
+            border: var(--border-glass);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .hero-banner {
+            position: relative;
+            padding: 55px 24px 38px;
+            text-align: center;
+            background: linear-gradient(135deg, #0c0e24 0%, #1a0c3e 45%, #0a1628 100%);
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.18) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-stars {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 75% 15%, rgba(255, 255, 255, 0.35) 0%, transparent 100%),
+                radial-gradient(1px 1px at 55% 65%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 5% 75%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 88% 55%, rgba(255, 255, 255, 0.25) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+        }
+
+        .hero-banner h1 {
+            position: relative;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.5rem, 4vw, 2.4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #d4a853, #f0d78c, #d4a853);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .hero-banner .subtitle {
+            position: relative;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .birth-info-pill {
+            position: relative;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            justify-content: center;
+            background: rgba(16, 18, 50, 0.6);
+            border: 1px solid rgba(212, 168, 83, 0.25);
+            border-radius: 50px;
+            padding: 9px 22px;
+            font-size: 0.88rem;
+            color: var(--accent-gold);
+            font-weight: 500;
+        }
+
+        .birth-info-pill .sep {
+            opacity: 0.45;
+        }
+
+        #loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .orbit {
+            width: 72px;
+            height: 72px;
+            border: 2px solid transparent;
+            border-top-color: var(--accent-gold);
+            border-right-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 1.1s linear infinite;
+            margin-bottom: 22px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loading-state p {
+            color: var(--text-secondary);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: .5
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        #results-state {
+            display: none;
+            padding: 36px 0 80px;
+        }
+
+        #error-state {
+            display: none;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 22px;
+        }
+
+        .zodiac-badge {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-card);
+            border: 1px solid rgba(212, 168, 83, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 20px 26px;
+            margin-bottom: 28px;
+            backdrop-filter: blur(10px);
+        }
+
+        .zodiac-icon {
+            font-size: 2.4rem;
+        }
+
+        .zodiac-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .zodiac-dates {
+            font-size: 0.83rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border: var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 26px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-love::before {
+            background: linear-gradient(90deg, #f472b6, #ec4899);
+        }
+
+        .card-career::before {
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+        }
+
+        .card-money::before {
+            background: linear-gradient(90deg, #d4a853, #f0d78c);
+        }
+
+        .card-health::before {
+            background: linear-gradient(90deg, #34d399, #10b981);
+        }
+
+        .card-home::before {
+            background: linear-gradient(90deg, #a78bfa, #8b5cf6);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .category-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .card-love .category-icon {
+            background: rgba(244, 114, 182, 0.12);
+        }
+
+        .card-career .category-icon {
+            background: rgba(96, 165, 250, 0.12);
+        }
+
+        .card-money .category-icon {
+            background: rgba(212, 168, 83, 0.12);
+        }
+
+        .card-health .category-icon {
+            background: rgba(52, 211, 153, 0.12);
+        }
+
+        .card-home .category-icon {
+            background: rgba(167, 139, 250, 0.12);
+        }
+
+        .category-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .card-love .category-title {
+            color: #f472b6;
+        }
+
+        .card-career .category-title {
+            color: #60a5fa;
+        }
+
+        .card-money .category-title {
+            color: var(--accent-gold);
+        }
+
+        .card-health .category-title {
+            color: #34d399;
+        }
+
+        .card-home .category-title {
+            color: #a78bfa;
+        }
+
+        .category-text {
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+
+        #error-state h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.35rem;
+            margin-bottom: 10px;
+        }
+
+        #error-state p {
+            color: var(--text-secondary);
+            margin-bottom: 22px;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4a853, #8b5cf6);
+            color: #fff;
+            box-shadow: 0 4px 18px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(139, 92, 246, 0.5);
+        }
+
+        .page-footer {
+            text-align: center;
+            padding: 28px;
+            border-top: var(--border-glass);
+            color: var(--text-secondary);
+            font-size: 0.83rem;
+        }
+
+        @media (max-width: 600px) {
+            .hero-banner {
+                padding: 36px 18px 28px;
+            }
+
+            .zodiac-badge {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="page-header">
+        <a class="logo-link" href="/">
+            <img src="/assets/images/logo.webp" alt="FateSpy logo" />
+            FateSpy
+        </a>
+        <a class="back-btn" href="/#personalized-horoscope">&#8592; Back</a>
+    </header>
+
+    <div class="hero-banner">
+        <div class="hero-stars"></div>
+        <h1>Your Personal Horoscope</h1>
+        <p class="subtitle">AI-generated reading based on your exact birth data</p>
+        <div class="birth-info-pill" id="birth-info-pill">&#8230;</div>
+    </div>
+
+    <div id="loading-state">
+        <div class="orbit"></div>
+        <p>&#10024; Consulting the stars for your personal reading&#8230;</p>
+    </div>
+
+    <div id="error-state">
+        <div class="container">
+            <div class="error-icon">&#127761;</div>
+            <h2>The stars are silent right now</h2>
+            <p id="error-msg">We could not generate your horoscope. Please try again.</p>
+            <a href="javascript:history.back()" class="btn btn-primary">&#8592; Try Again</a>
+        </div>
+    </div>
+
+    <div id="results-state">
+        <div class="container">
+            <div class="zodiac-badge">
+                <div class="zodiac-icon" id="res-zodiac-icon">&#9800;</div>
+                <div>
+                    <div class="zodiac-name" id="res-zodiac-name">Aries</div>
+                    <div class="zodiac-dates" id="res-zodiac-dates"></div>
+                </div>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card card-love">
+                    <div class="category-header">
+                        <div class="category-icon">&#128150;</div>
+                        <div class="category-title">Love &amp; Relationships</div>
+                    </div>
+                    <p class="category-text" id="res-love"></p>
+                </div>
+                <div class="category-card card-career">
+                    <div class="category-header">
+                        <div class="category-icon">&#128188;</div>
+                        <div class="category-title">Career &amp; Work</div>
+                    </div>
+                    <p class="category-text" id="res-career"></p>
+                </div>
+                <div class="category-card card-money">
+                    <div class="category-header">
+                        <div class="category-icon">&#128176;</div>
+                        <div class="category-title">Money &amp; Finances</div>
+                    </div>
+                    <p class="category-text" id="res-money"></p>
+                </div>
+                <div class="category-card card-health">
+                    <div class="category-header">
+                        <div class="category-icon">&#127807;</div>
+                        <div class="category-title">Health &amp; Energy</div>
+                    </div>
+                    <p class="category-text" id="res-health"></p>
+                </div>
+                <div class="category-card card-home">
+                    <div class="category-header">
+                        <div class="category-icon">&#127968;</div>
+                        <div class="category-title">Family &amp; Home</div>
+                    </div>
+                    <p class="category-text" id="res-home"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="page-footer">
+        <p>&#128302; FateSpy.com &mdash; For entertainment and self-discovery purposes only.</p>
+    </footer>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var API_KEY = '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';
+            var API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+            var ZODIAC = {
+                aries: { icon: '\u2648', name: 'Aries', dates: 'March 21 - April 19' },
+                taurus: { icon: '\u2649', name: 'Taurus', dates: 'April 20 - May 20' },
+                gemini: { icon: '\u264A', name: 'Gemini', dates: 'May 21 - June 20' },
+                cancer: { icon: '\u264B', name: 'Cancer', dates: 'June 21 - July 22' },
+                leo: { icon: '\u264C', name: 'Leo', dates: 'July 23 - August 22' },
+                virgo: { icon: '\u264D', name: 'Virgo', dates: 'August 23 - September 22' },
+                libra: { icon: '\u264E', name: 'Libra', dates: 'September 23 - October 22' },
+                scorpio: { icon: '\u264F', name: 'Scorpio', dates: 'October 23 - November 21' },
+                sagittarius: { icon: '\u2650', name: 'Sagittarius', dates: 'November 22 - December 21' },
+                capricorn: { icon: '\u2651', name: 'Capricorn', dates: 'December 22 - January 19' },
+                aquarius: { icon: '\u2652', name: 'Aquarius', dates: 'January 20 - February 18' },
+                pisces: { icon: '\u2653', name: 'Pisces', dates: 'February 19 - March 20' }
+            };
+
+            var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            function getSign(month, day) {
+                var md = parseInt(month) * 100 + parseInt(day);
+                if (md >= 321 && md <= 419) return 'aries';
+                if (md >= 420 && md <= 520) return 'taurus';
+                if (md >= 521 && md <= 620) return 'gemini';
+                if (md >= 621 && md <= 722) return 'cancer';
+                if (md >= 723 && md <= 822) return 'leo';
+                if (md >= 823 && md <= 922) return 'virgo';
+                if (md >= 923 && md <= 1022) return 'libra';
+                if (md >= 1023 && md <= 1121) return 'scorpio';
+                if (md >= 1122 && md <= 1221) return 'sagittarius';
+                if (md >= 1222 || md <= 119) return 'capricorn';
+                if (md >= 120 && md <= 218) return 'aquarius';
+                return 'pisces';
+            }
+
+            function el(id) { return document.getElementById(id); }
+
+            function showError(msg) {
+                el('loading-state').style.display = 'none';
+                el('error-state').style.display = 'block';
+                el('error-msg').textContent = msg || 'Something went wrong. Please try again.';
+            }
+
+            function showResults(data, sign) {
+                el('loading-state').style.display = 'none';
+                var zd = ZODIAC[sign] || ZODIAC.aries;
+                el('res-zodiac-icon').textContent = zd.icon;
+                el('res-zodiac-name').textContent = zd.name;
+                el('res-zodiac-dates').textContent = zd.dates;
+                var fallback = 'The stars are still aligning for this aspect of your life. Check back soon.';
+                el('res-love').textContent = data.love || fallback;
+                el('res-career').textContent = data.career || fallback;
+                el('res-money').textContent = data.money || fallback;
+                el('res-health').textContent = data.health || fallback;
+                el('res-home').textContent = data.home || fallback;
+                el('results-state').style.display = 'block';
+            }
+
+            function pad(n) { return String(n).padStart(2, '0'); }
+
+            async function run(p) {
+                var sign = getSign(p.month, p.day);
+                var zd = ZODIAC[sign] || ZODIAC.aries;
+                var mName = MONTHS[parseInt(p.month) - 1] || p.month;
+
+                // Show birth pill
+                el('birth-info-pill').innerHTML =
+                    zd.icon + ' <strong>' + zd.name + '</strong>' +
+                    ' <span class="sep">|</span> ' + p.day + ' ' + mName + ' ' + p.year +
+                    ' <span class="sep">|</span> ' + p.hour + ':' + pad(p.minute) +
+                    (p.place ? ' <span class="sep">|</span> ' + p.place : '') +
+                    ' <span class="sep">|</span> ' + p.gender;
+
+                // Cache check
+                var cacheKey = 'fs_ph_' + [p.day, p.month, p.year, p.hour, p.minute, p.place, p.gender].join('_');
+                try {
+                    var cached = localStorage.getItem(cacheKey);
+                    if (cached) {
+                        var cd = JSON.parse(cached);
+                        if (Date.now() - cd.ts < 86400000) { showResults(cd.r, sign); return; }
+                    }
+                } catch (e) { }
+
+                var today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                var prompt = 'Today is ' + today + '. Generate a deeply personal horoscope for a ' + p.gender +
+                    ' born on ' + p.day + ' ' + mName + ' ' + p.year + ' at ' + p.hour + ':' + pad(p.minute) +
+                    ' in ' + (p.place || 'an unknown location') + '. Sun sign: ' + zd.name + '.\n\n' +
+                    'Write 3-4 rich, personal, mystical sentences per category.\n\n' +
+                    'YOU MUST return ALL 5 keys. Respond ONLY with this exact JSON (fill all values):\n' +
+                    '{"love":"...","career":"...","money":"...","health":"...","home":"..."}';
+
+                try {
+                    var resp = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
+                        body: JSON.stringify({
+                            model: 'llama-3.3-70b-versatile',
+                            messages: [
+                                { role: 'system', content: 'You are FateSpy, a professional astrologer. Give deeply personal readings. Respond ONLY with valid JSON, no markdown.' },
+                                { role: 'user', content: prompt }
+                            ],
+                            temperature: 0.92,
+                            max_tokens: 1200,
+                            response_format: { type: 'json_object' }
+                        })
+                    });
+
+                    if (!resp.ok) throw new Error('API ' + resp.status);
+                    var json = await resp.json();
+                    var text = json && json.choices && json.choices[0] && json.choices[0].message && json.choices[0].message.content;
+                    if (!text) throw new Error('Empty response');
+                    var reading = JSON.parse(text);
+                    if (!reading.love) throw new Error('Bad format');
+
+                    try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), r: reading })); } catch (e) { }
+                    showResults(reading, sign);
+
+                } catch (err) {
+                    console.error('Horoscope error:', err);
+                    showError('The stars are temporarily unavailable. Please try again in a moment.');
+                }
+            }
+
+            // Parse URL params
+            var sp = new URLSearchParams(window.location.search);
+            var params = {
+                day: sp.get('day') || '',
+                month: sp.get('month') || '1',
+                year: sp.get('year') || '1990',
+                hour: sp.get('hour') || '12',
+                minute: sp.get('minute') || '0',
+                place: sp.get('place') || '',
+                gender: sp.get('gender') || 'other'
+            };
+
+            if (!params.day) {
+                showError('No birth data provided. Please go back and fill in the form.');
+            } else {
+                run(params);
+            }
+        })();
+    </script>
+</body>
+
+</html>

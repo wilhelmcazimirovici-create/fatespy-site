@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FateSpy API & Widgets | Developers</title>
+    <meta name="description"
+        content="Integrate FateSpy's astrology, tarot, and numerology AI mechanics directly into your application using our API and Embeddable Widgets." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        .api-hero {
+            padding: 120px 0 60px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(16, 18, 50, 0.4) 100%);
+            border-bottom: var(--border-glass);
+        }
+
+        .api-hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+
+        .api-hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Minimal -->
+    <header class="site-header" id="site-header" style="background: rgba(12, 14, 36, 0.9);">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <img src="/assets/images/logo.webp" alt="FateSpy Logo" width="32" height="32"
+                    style="margin-right:10px;">
+                FATE<span style="color:var(--accent-gold)">SPY</span>.COM
+            </a>
+            <nav class="main-nav">
+                <a href="/" class="nav-link">← Back to Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="api-hero">
+        <div class="container">
+            <h1>Developers & Publishers</h1>
+            <p>Integrate FateSpy's raw deterministic data directly into your website. Our suite of APIs and widgets
+                allow you to offer our core services (Horoscope, Tarot, Compatibility, Weather Synergy) to your own
+                audience.</p>
+        </div>
+    </section>
+
+    <section class="api-content" style="padding: 80px 0;">
+        <div class="container">
+            <div class="bento-grid bento-grid-3">
+                <div class="bento-card">
+                    <div class="bento-card-body">
+                        <div style="font-size: 2.5rem; color: var(--accent-gold); margin-bottom:15px;">{" "}</div>
+                        <h3 class="bento-title">RESTful API</h3>
+                        <p class="bento-desc">Raw JSON data endpoints for Lunar phases, planetary transits and
+                            synthesized Horoscopes with local weather injection mechanics.</p>
+                        <button class="btn btn-outline btn-sm" style="margin-top:20px;">View Documentation</button>
+                    </div>
+                </div>
+
+                <div class="bento-card">
+                    <div class="bento-card-body">
+                        <div style="font-size: 2.5rem; color: var(--accent-purple); margin-bottom:15px;">&lt;/&gt;</div>
+                        <h3 class="bento-title">Embeddable Widgets</h3>
+                        <p class="bento-desc">Drop a line of Javascript to inject fully functional Bento grids and "Card
+                            of the day" tarot readers onto any CMS flawlessly.</p>
+                        <button class="btn btn-outline btn-sm" style="margin-top:20px;">Get Snippets</button>
+                    </div>
+                </div>
+
+                <div class="bento-card" style="border: 1px solid var(--accent-gold);">
+                    <div class="bento-card-body">
+                        <div style="font-size: 2.5rem; margin-bottom:15px;">⛅</div>
+                        <h3 class="bento-title">Weather Synergy System</h3>
+                        <p class="bento-desc">Our proprietary AI blends astrology metadata with the user's localized
+                            weather conditions to yield deeply contextual readings.</p>
+                        <button class="btn btn-accent btn-sm" style="margin-top:20px;">Partner Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 60px; padding: 40px; background: rgba(255,255,255,0.02); border: var(--border-glass); border-radius: var(--radius-lg);">
+                <h2 style="font-family: 'Cinzel', serif; color: var(--accent-purple-l); margin-bottom: 20px;">Getting
+                    Started</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">To access the FateSpy API, you must
+                    request an API key from our developer console. Access is currently limited to approved partners to
+                    ensure computational stability for our AI models.</p>
+                <pre style="background: #000; padding: 15px; border-radius: 8px; color: #a5d6ff; overflow-x: auto;">
+curl -X GET "https://api.fatespy.com/v1/horoscope?zodiac=aries&synergy=true" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+          </pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Minimal -->
+    <footer class="site-footer" style="padding: 40px 0; border-top: var(--border-glass); text-align: center;">
+        <div class="container">
+            <p class="copyright">&copy; 2026 FateSpy.com — All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

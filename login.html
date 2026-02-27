@@ -1,0 +1,883 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FateSpy — Login</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #07071a;
+            --card: rgba(13, 15, 42, .85);
+            --gold: #d4a853;
+            --purple: #8b5cf6;
+            --purpll: #a78bfa;
+            --green: #10b981;
+            --red: #ef4444;
+            --txt: #f0f0ff;
+            --txt2: rgba(240, 240, 255, .55);
+            --border: rgba(255, 255, 255, .09);
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            position: relative;
+        }
+
+        /* ── Animated background ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 70% 60% at 15% 40%, rgba(139, 92, 246, .14) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 70% at 85% 25%, rgba(212, 168, 83, .09) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Stars ── */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .7);
+            animation: twinkle var(--d, 3s) ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: .15
+            }
+
+            50% {
+                opacity: .85
+            }
+        }
+
+        /* ── Card ── */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: var(--card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 40px 36px 32px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, .55);
+            animation: fadeUp .45s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* ── Logo ── */
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo-icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 10px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-7px)
+            }
+        }
+
+        .logo-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(130deg, var(--gold) 30%, var(--purpll));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .logo-sub {
+            font-size: .68rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--txt2);
+            margin-top: 5px;
+        }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: rgba(255, 255, 255, .05);
+            border-radius: 11px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 9px 0;
+            text-align: center;
+            font-size: .87rem;
+            font-weight: 600;
+            color: var(--txt2);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background .2s, color .2s;
+            user-select: none;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, .08);
+            color: var(--txt);
+            box-shadow: 0 1px 6px rgba(0, 0, 0, .25);
+        }
+
+        /* ── Alert message ── */
+        .msg {
+            border-radius: 9px;
+            font-size: .84rem;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .msg.show {
+            display: block
+        }
+
+        .msg.err {
+            background: rgba(239, 68, 68, .13);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, .25)
+        }
+
+        .msg.ok {
+            background: rgba(16, 185, 129, .13);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, .25)
+        }
+
+        /* ── Forms ── */
+        .form {
+            display: none;
+            flex-direction: column;
+            gap: 14px
+        }
+
+        .form.active {
+            display: flex
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px
+        }
+
+        .field label {
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+        }
+
+        .field input {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: var(--txt);
+            font-family: 'Inter', sans-serif;
+            font-size: .92rem;
+            width: 100%;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, .5);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, .1);
+        }
+
+        .field input::placeholder {
+            color: var(--txt2)
+        }
+
+        /* ── Password wrapper ── */
+        .pw-wrap {
+            position: relative
+        }
+
+        .pw-wrap input {
+            padding-right: 44px
+        }
+
+        .pw-eye {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: .95rem;
+            color: var(--txt2);
+            user-select: none;
+            line-height: 1;
+        }
+
+        /* ── Forgot link ── */
+        .forgot {
+            text-align: right;
+            margin-top: -6px;
+        }
+
+        .forgot a {
+            font-size: .78rem;
+            color: var(--purpll);
+            text-decoration: none;
+        }
+
+        .forgot a:hover {
+            text-decoration: underline
+        }
+
+        /* ── Strength bar ── */
+        .strength-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, .07);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 3px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            border-radius: 2px;
+            width: 0;
+            transition: width .3s, background .3s;
+        }
+
+        .strength-label {
+            font-size: .68rem;
+            color: var(--txt2);
+            margin-top: 2px;
+        }
+
+        /* ── Main button ── */
+        .btn-main {
+            width: 100%;
+            padding: 13px;
+            border-radius: 11px;
+            border: none;
+            background: linear-gradient(135deg, var(--gold), var(--purple));
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: .95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity .2s, transform .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+        }
+
+        .btn-main:hover:not(:disabled) {
+            opacity: .88;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, .3)
+        }
+
+        .btn-main:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, .35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        /* ── Divider ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .74rem;
+            color: var(--txt2);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── Google button ── */
+        .btn-google {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 11px;
+            background: rgba(255, 255, 255, .04);
+            color: var(--txt);
+            font-family: 'Inter', sans-serif;
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s, border-color .2s, transform .2s;
+            min-height: 48px;
+        }
+
+        .btn-google:hover:not(:disabled) {
+            background: rgba(255, 255, 255, .08);
+            border-color: rgba(255, 255, 255, .22);
+            transform: translateY(-1px);
+        }
+
+        .btn-google:disabled {
+            opacity: .5;
+            cursor: wait
+        }
+
+        .btn-google svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0
+        }
+
+        /* ── 2FA screen ── */
+        .twofa {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+            text-align: center
+        }
+
+        .twofa.show {
+            display: flex
+        }
+
+        .twofa-icon {
+            font-size: 2.5rem
+        }
+
+        .twofa-title {
+            font-weight: 600;
+            font-size: 1rem
+        }
+
+        .twofa-sub {
+            font-size: .83rem;
+            color: var(--txt2);
+            line-height: 1.4
+        }
+
+        .twofa input {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 10px;
+            padding: 14px;
+            color: var(--txt);
+            font-size: 1.6rem;
+            font-family: monospace;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 10px;
+            width: 100%;
+        }
+
+        .twofa input:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, .5);
+        }
+
+        .twofa-back {
+            font-size: .8rem;
+            color: var(--txt2);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .twofa-back:hover {
+            color: var(--txt)
+        }
+
+        /* ── Footer links ── */
+        .foot {
+            margin-top: 20px;
+            text-align: center;
+            font-size: .77rem;
+            color: var(--txt2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .foot a {
+            color: var(--purpll);
+            text-decoration: none
+        }
+
+        .foot a:hover {
+            text-decoration: underline
+        }
+
+        .foot-dot {
+            opacity: .4
+        }
+
+        /* ── Honey pot ── */
+        .hp {
+            display: none !important
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 22px 26px;
+                border-radius: 18px
+            }
+
+            .logo-name {
+                font-size: 1.5rem
+            }
+
+            .logo-icon {
+                font-size: 2.4rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars" id="stars"></div>
+
+    <div class="card">
+
+        <!-- Logo -->
+        <a href="/" class="logo" style="display:block;text-decoration:none">
+            <img src="/assets/images/logo.webp" alt="FateSpy" class="logo-icon"
+                style="width:64px;height:64px;object-fit:contain;margin-left:auto;margin-right:auto" />
+            <div class="logo-name">FateSpy</div>
+            <div class="logo-sub">Decipher your destiny</div>
+        </a>
+
+        <!-- Tabs -->
+        <div class="tabs" id="tabs">
+            <div class="tab active" data-form="login">Sign In</div>
+            <div class="tab" data-form="register">Register</div>
+        </div>
+
+        <!-- Alert -->
+        <div class="msg" id="msg"></div>
+
+        <!-- ── SIGN IN ── -->
+        <form class="form active" id="form-login" novalidate>
+            <div class="field">
+                <label for="l-email">Email</label>
+                <input id="l-email" type="email" placeholder="your@email.com" autocomplete="email" required />
+            </div>
+            <div class="field">
+                <label for="l-pw">Password</label>
+                <div class="pw-wrap">
+                    <input id="l-pw" type="password" placeholder="••••••••" autocomplete="current-password" required />
+                    <span class="pw-eye" onclick="togglePw('l-pw',this)">👁</span>
+                </div>
+            </div>
+            <div class="forgot">
+                <a href="#" onclick="showForgot(event)">Forgot password?</a>
+            </div>
+            <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" />
+            <button type="submit" class="btn-main" id="btn-login">
+                <span id="btn-login-lbl">Sign In</span>
+                <div class="spinner" id="btn-login-spin"></div>
+            </button>
+            <div class="divider">or continue with</div>
+            <button type="button" class="btn-google" id="btn-google" onclick="signInWithGoogle()">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                        fill="#4285F4" />
+                    <path
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        fill="#34A853" />
+                    <path
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                        fill="#FBBC05" />
+                    <path
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        fill="#EA4335" />
+                </svg>
+                Continue with Google
+            </button>
+        </form>
+
+        <!-- ── 2FA ── -->
+        <div class="twofa" id="twofa">
+            <div class="twofa-icon">📱</div>
+            <div class="twofa-title">Two-Factor Authentication</div>
+            <div class="twofa-sub">Enter the 6-digit code from your authenticator app</div>
+            <input id="twofa-code" type="text" inputmode="numeric" maxlength="6" placeholder="000 000"
+                autocomplete="one-time-code" />
+            <button type="button" class="btn-main" onclick="submit2FA()">Verify Code</button>
+            <button type="button" class="twofa-back" onclick="cancel2FA()">← Back to login</button>
+        </div>
+
+        <!-- ── REGISTER ── -->
+        <form class="form" id="form-register" novalidate>
+            <div class="field">
+                <label for="r-name">Full Name</label>
+                <input id="r-name" type="text" placeholder="Maria Ionescu" autocomplete="name" required />
+            </div>
+            <div class="field">
+                <label for="r-email">Email</label>
+                <input id="r-email" type="email" placeholder="your@email.com" autocomplete="email" required />
+            </div>
+            <div class="field">
+                <label for="r-pw">Password</label>
+                <div class="pw-wrap">
+                    <input id="r-pw" type="password" placeholder="Min 8 chars, uppercase & number"
+                        autocomplete="new-password" required oninput="strengthCheck(this.value)" />
+                    <span class="pw-eye" onclick="togglePw('r-pw',this)">👁</span>
+                </div>
+                <div class="strength-bar">
+                    <div class="strength-fill" id="sfill"></div>
+                </div>
+                <div class="strength-label" id="slbl"></div>
+            </div>
+            <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" />
+            <button type="submit" class="btn-main" id="btn-reg">
+                <span id="btn-reg-lbl">Create Account</span>
+                <div class="spinner" id="btn-reg-spin"></div>
+            </button>
+            <div class="divider">or continue with</div>
+            <button type="button" class="btn-google" onclick="signInWithGoogle()">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                        fill="#4285F4" />
+                    <path
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        fill="#34A853" />
+                    <path
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                        fill="#FBBC05" />
+                    <path
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        fill="#EA4335" />
+                </svg>
+                Sign up with Google
+            </button>
+        </form>
+
+        <!-- ── FORGOT PASSWORD ── -->
+        <form class="form" id="form-forgot" novalidate>
+            <div style="text-align:center;margin-bottom:6px">
+                <div style="font-size:2rem;margin-bottom:8px">🔑</div>
+                <div style="font-weight:600;margin-bottom:4px">Reset Password</div>
+                <div style="font-size:.83rem;color:var(--txt2)">Enter your email to receive a reset link</div>
+            </div>
+            <div class="field">
+                <label for="f-email">Email</label>
+                <input id="f-email" type="email" placeholder="your@email.com" required />
+            </div>
+            <button type="submit" class="btn-main" id="btn-forgot">
+                <span id="btn-forgot-lbl">Send Reset Link</span>
+                <div class="spinner" id="btn-forgot-spin"></div>
+            </button>
+            <button type="button" class="twofa-back" onclick="cancelForgot()">← Back to login</button>
+        </form>
+
+        <!-- Footer -->
+        <div class="foot">
+            <a href="/">← FateSpy.com</a>
+            <span class="foot-dot">·</span>
+            <a href="/privacy.html">Privacy</a>
+            <span class="foot-dot">·</span>
+            <a href="/terms.html">Terms</a>
+        </div>
+
+    </div><!-- /card -->
+
+    <script>
+        const A         '/api';
+
+        // ── Already logged in? Redirect by role ─        ─────────────
+        (function () {
+            const t = localStorage.getItem('fs_to        );
+    const u = JSON.parse(localStorage.getItem('fs_user')        'null');
+            if (t && u) redirect(u.ro        
+})();
+
+functio            ct(role) {
+            window.location.href = role === 'admin' ? '/admin.html'            r - dashboard.html';
+        }
+
+        // ── Stars ──────────────────────────────        ───        ───────
+        (function () {
+            const c         cument.getElementById('stars');
+            for (let i = i < 70; i + {
+                const s = document.createElement('div');
+             .className = 'star';
+                const sz = Math.random() < .2 ? 3 : 2;
+                le.cssText =
+                    `left:${(Math.random() * 100).toFixed(1)}                                     h.random()*100).toFixed(1)}%;` +
+                    th:
+            }px; height:${ sz } px; ` +
+            `--d:${ (2 + Math.random()        toFixed(1) } s; ` +
+            `--delay:${ (Math.rand * 5).toFixed(1) } s; ` +
+                      ty:${(Math.random() * .4 + .1).toFixed(2)}`;
+            c.appendChild(s);
+
+// ── Tabs ─────────────────────────── ─ ─────────────────────
+doc u ment.querySelectorAll('.tab ').forEach(tab => {
+                tab.addEventListener('click', () => {
+        docume n t.querySelectorAll('.tab').forEach(t => t.classList.r e mo v e('active'));
+                    document.querySelectorAll('. f or m ').forEach(f => f.classList.r e mo v e('active                 tab.classList.add('        ve'               document.getElementById('form - ' + tab.dataset.form)        ssList.add('active');
+        clearMsg();
+                });
+            }            ─ Helpers ────────────────────────────                ───────
+                function showMsg(tx                rr') {
+    const el = document.getElementById('msg');
+            el.textContent = txt                ssName = 'msg show ' + type;
+        }
+function clearMsg() {
+            document.getElementByI                ssName = 'msg';
+        }
+        function se                Id, spinId, on) {
+            const btn = document.getElementById(btnI                t spin = doc            tEle        ById(Id);
+            const lbl = document.getElementById(btnId + '-lb        
+    btn.disabled = on;
+            spin.style.            = on ? 'block' : 'none';
+            if (lbl) lbl.s            play = on ? 'none' : ''            tion togglePw(id, eye) {
+                const el = me        etElementById(id);
+                = el.type === 'password' ? 'text' : 'passw              eye.textContent = el        e =        text' ? '🙈' : '👁';
+            }
+            async function post(url, body) {
+          nst r = await fetch(API + url, {
+                method:
+                    headers: { 'Content-Type': 'applica            n' },
+                body: JSON.stringify(body),
+    }            eturn r.json();
+        }
+
+// ── Password strength ──────────            ───────────────────
+func            engthCheck(pw) {
+            let s = 0;
+            if (pw.lengt             s++;
+            if (pw.length >= 12) s++;
+            if (/[A-Z]/.test(p        s++          if (/[0-9]/.test(pw)) s++;
+            if (/[^A-Za-z0-9]/.test(p        s++;
+            const cfg = [
+                {
+                    w: '20%', c: '#ef4444', l: 'Very wea                  { w:'40% ', c:'#f97316', l:'Weak' },
+            { w: '60%', c: '#eab308', l: 'Fair' },
+                   % ', c:'#22c55e', l:'Strong' },
+        { w        0% '        #10b981', l: 'Very strong' },
+            ];
+            const f = cfg[s] |        ;
+            const fill = document.g            tById('sfill');
+            const lbl = document.getElementByI            );
+            fill.style.width = f.w || '0';
+            fill.style.ba = f.c || 'tran            ;
+            lbl.textConte = f.l || lbl.style.color = f.c || '';
+            LOGIN ────────────────────────            ─────────────────
+            let pending2F;
+
+            document.getElementById('form-login            entListener('subm => {
+                e.ventDefault(); clearMsg();
+    cons                cument.getEle ntById('l-email').trim();
+                const pw                 t.getElementB d('l-pw').value;
+                (!email || !pw)                 sg('Please en r email and passw ;
+    setLoading('btn-login-sp ', true);
+                try      const res = awa                th/login.php', { email, password website: '' });
+                    .ok             showMsg(res.error || 'Login failed.')              if (res.data.r uires_2fa                    pending2FA = { email, pas            w, challenge: re data.challe            n };
+            howTwoFA(); return;
+        }
+        onSuccess(res.data);
+    } cat         showMsg('Network error. Check your conne            ; }
+    finally {
+            setLoading('btn-login'                spin',false); }
+                FA ──────────────────────────────────────────────                on showTwoFA() {
+                documen            elec            .form').forEach(f        f.c        List.remove('active'));
+    document.getElementById('tabs'        yle.visibility = 'hidden           document.getElementById('twofa').classList.add('show');
+    document.getEleme            twofa - code').focus()            tion cancel2               pending2  null;
+    document.getElementById('twofa').classList.r            how');
+    document.getElementById('tabs').style.visibility = '';
+                ment.getElementById('form-login').classList.add('active');
+                clearMsg();
+            }
+            nction submit2FA() {
+                const code = document.getE            Id('tw                alue.replace(/\D/g,'');
+    if(code.length !== 6) return showMsg('Enter the 6-d                ;
+    clearMsg();
+            try {
+                const v = await post('/                ?action=verify', {
+                    ng2FA?.user_id, cod                    hallenge_token: pending2FA?.challenge,
+                });
+                if (!v.ok) r                    error || 'Invalid code.');
+                const res = await post('/auth/l                             email: pending2FA.email, password: pending2FA.p                         website: '', twofa_verified: pending2FA.challenge,
+                        if (!res.ok) return showMsg(res.error || 'Login                        onSu                ta)                h { showMsg('Verification             Try again.'); }
+                etElementById('twofa-code').addEventListener('keydown', e              if (e.key                  submit2FA();
+            });
+
+            // ── REGISTER ──────────────────            ──        ─────        ─────
+            document.getElementById('form-register').addEventLis        r('submit', async e => {
+                tDefault(); clearMsg();
+                const name = document.getElementById            ').value.trim();
+                const email = document.getElementById('r-ema            ue.trim();
+              pw                    etElementById('r-pw').value;
+                if (!name || !email || !pw('All fields are required.');
+                btn - re                    ',true);
+                try {
+                    const res = a                auth                p', { name, email, password: pw, website: '' });
+                    if                eturn showMsg(res.error || 'Registration failed                 showMsg('Account created! ✨ Check your email to act);
+                    document.getEl                    register').reset();
+        doc                    ById('sfill')                    0';
+                    document.getElementById('s                nten                } catch { showMsg('Network error.Please try again.'); }
+    finally                g('btn-reg', 'btn-reg-spin', fals            ;
+
+// ── F                RD ────────────────────────────────────────
+             s        org        ) {
+                e.preventDefault();
+                document.querySelectorAll('.form').forEac.classList.remove('active'));
+                do nt.ge        mentById('tabs').style.v            y = 'hidden';
+                do etElementById('form            ).classList.add('active');
+    clearMsg();
+}
+            function cancelFor                document.getElementById('form-forgot').classList.rem            ive');
+            document.getElementById('tabs').style.visibility = '            ocument.getE        ntB        'form - login').classList.add('active');
+            clearMsg();
+        }
+d        ent.getElementById('form-forgot'            ntListener('submit', async e => {
+            e.preve                 clearMsg();
+            const email = document.getElementById('f-                e.trim()             (            return showMsg('Ent            email address.');
+    setLoading('btn-forgot', got - spin',true);
+    try {
+                const res = await post('/au            t.php', { email });
+                showMsg(res.data?.mes            'If registered, a r                s sent.', 'ok');
+            } catch { showMsg('Network error.'); }
+            Loading('btn-for                    -spin', false);            // ── SUC         →         rect by role ────────────────────────────
+            function onSucce        ata) {
+            localStorage.setItem('fs_token', data.token);
+            localStorage.setItem('            ,  JSON.stringify(da            );
+    showM            ome back!  ecting…', 'ok');
+    setTimeout(() => redirect(data.e), 700);
+        }  ── GOOGLE SIGN - IN ──────────────────────────────────            // Set your Google OAuth Client ID here (or fetch from /api/admin            s)
+const GID = 'REPLACE_WITH_GOOGLE_CLIENT_ID';
+
+        window.onGoogleLibraryLoad = () {
+            if (!GID || GID.includes('REPLACE')) return;
+               accoun                lize({ client_id: GID, callback: onGoogleToken });
+        };
+
+        function signInWithGoogle() {
+            GID.includes('REPLACE')) {
+                return showMsg('Google Sign-In                red on this server yet.', 'err');
+            }
+            google.accounts.id.prompt(function onGoogleToken(response) {
+                const btn = tElementById('btn-google');
+                if (btn) btn.disabled = true                sg();
+                try {
+                    const res = await fetch('/api/auth/            hp', {
+                        hod: 'POST',
+                        headers: {
+                            'Content-            application/                         body: JSON.stringify({ id_token: response.credent                        });             const data = await res.json();
+        if(!data.ok)                   showMsg(data.er            Google Sign - In faile            r');
+                    if (btn) btn.disabled = false;
+                    return;
+                }
+             nSuccess(data.data);
+            } catch {
+                showMsg('Netw            r during Google Sign-In.', 'err');
+                if (btn) btn.disabled;
+            }
+        }
+    </script>
+</body>
+
+</html>

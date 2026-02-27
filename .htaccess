@@ -1,0 +1,156 @@
+Options -Indexes
+Options +FollowSymLinks
+
+RewriteEngine On
+
+# ── HTTPS force (301 permanent) ──────────────────────────
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ── WWW → non-WWW ────────────────────────────────────────
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+# ── Serve existing static files directly ─────────────────
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ── Block access to sensitive directories/files ──────────
+RewriteRule ^config/         - [F,L,NC]
+RewriteRule ^cron/           - [F,L,NC]
+RewriteRule ^\.              - [F,L,NC]
+RewriteRule ^composer\.      - [F,L,NC]
+
+# ════════════════════════════════════════════════════════
+#  SECURITY HEADERS
+# ════════════════════════════════════════════════════════
+<IfModule mod_headers.c>
+    # Prevent MIME-type sniffing attacks
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Clickjacking protection
+    Header always set X-Frame-Options "DENY"
+
+    # XSS protection (legacy browsers)
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Referrer policy — don't leak URLs to third parties
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # HSTS — force HTTPS for 1 year (preload ready)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Permissions policy — disable unused browser features
+    Header always set Permissions-Policy "geolocation=(self), camera=(self), microphone=(), usb=(), payment=(self \"https://js.stripe.com\")"
+
+    # Remove server signature
+    Header always unset X-Powered-By
+    Header always unset Server
+
+    # Content Security Policy
+    # ── What each directive does:
+    # default-src  → blocks everything not explicitly allowed
+    # script-src   → allows own scripts + Stripe.js (needed for payment)
+    # style-src    → own styles + Google Fonts
+    # font-src     → Google Fonts CDN
+    # img-src      → own images + data URIs (base64) + HTTPS (placehold.co etc)
+    # connect-src  → API calls: own + AI APIs + weather + Stripe
+    # frame-src    → Stripe.js iframes for payment
+    # form-action  → only submit to own domain
+    # base-uri     → prevent injection into <base> tag
+    # object-src   → block Flash/plugins
+    Header always set Content-Security-Policy "\
+default-src 'self'; \
+script-src 'self' 'unsafe-inline' https://js.stripe.com https://m.stripe.network; \
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
+font-src 'self' https://fonts.gstatic.com; \
+img-src 'self' data: blob: https:; \
+connect-src 'self' https://api.stripe.com https://api.groq.com https://api.open-meteo.com https://nominatim.openstreetmap.org; \
+frame-src https://js.stripe.com https://hooks.stripe.com; \
+worker-src 'self' blob:; \
+form-action 'self'; \
+base-uri 'self'; \
+object-src 'none'; \
+upgrade-insecure-requests;"
+
+    # Cross-Origin policies (prevent data leaks)
+    Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+    Header always set Cross-Origin-Resource-Policy "same-site"
+
+    # GDPR — don't cache sensitive pages
+    <FilesMatch "(user-dashboard|admin)\.html$">
+        Header always set Cache-Control "no-store, no-cache, must-revalidate, private"
+        Header always set Pragma "no-cache"
+    </FilesMatch>
+</IfModule>
+
+# ════════════════════════════════════════════════════════
+#  CACHING — static assets
+# ════════════════════════════════════════════════════════
+<IfModule mod_expires.c>
+    ExpiresActive On
+    # Images
+    ExpiresByType image/webp      "access plus 3 months"
+    ExpiresByType image/jpeg      "access plus 3 months"
+    ExpiresByType image/png       "access plus 3 months"
+    ExpiresByType image/svg+xml   "access plus 1 month"
+    ExpiresByType image/gif       "access plus 1 month"
+    # Fonts
+    ExpiresByType font/woff2      "access plus 1 year"
+    ExpiresByType font/woff       "access plus 1 year"
+    # CSS/JS (versioned via query string ideally)
+    ExpiresByType text/css                "access plus 1 week"
+    ExpiresByType application/javascript  "access plus 1 week"
+    # JSON horoscope data
+    ExpiresByType application/json "access plus 1 hour"
+    # HTML — always revalidate
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ════════════════════════════════════════════════════════
+#  COMPRESSION
+# ════════════════════════════════════════════════════════
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript \
+        application/javascript application/json text/xml application/xml \
+        text/plain font/woff2
+</IfModule>
+
+# ════════════════════════════════════════════════════════
+#  BLOCK SENSITIVE FILES
+# ════════════════════════════════════════════════════════
+<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|inc|ini|log|psd|sh|sql|sw[op])|~)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Block PHP execution inside uploads (critical!)
+<Directory "uploads">
+    <FilesMatch "\.php$">
+        Order Allow,Deny
+        Deny from all
+    </FilesMatch>
+</Directory>
+
+# Block install.php if it still exists (failsafe)
+<Files "install.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# ════════════════════════════════════════════════════════
+#  PHP HARDENING (if PHP via mod_php)
+# ════════════════════════════════════════════════════════
+<IfModule mod_php8.c>
+    php_flag display_errors         Off
+    php_flag log_errors             On
+    php_value upload_max_filesize   10M
+    php_value post_max_size         12M
+    php_value max_execution_time    60
+    php_flag session.cookie_httponly On
+    php_flag session.cookie_secure  On
+    php_value session.cookie_samesite Strict
+    php_flag session.use_strict_mode  On
+</IfModule>

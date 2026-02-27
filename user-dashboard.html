@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>My FateSpy Dashboard</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #07071a;
+            --bg2: #0d0f2a;
+            --bg3: #12143a;
+            --gold: #d4a853;
+            --purple: #8b5cf6;
+            --purple-l: #a78bfa;
+            --green: #10b981;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --pink: #f472b6;
+            --txt: #f0f0ff;
+            --txt2: rgba(240, 240, 255, .6);
+            --border: 1px solid rgba(255, 255, 255, .08);
+            --r: 14px;
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh
+        }
+
+        /* TOPBAR */
+        .topbar {
+            padding: 14px 28px;
+            border-bottom: var(--border);
+            background: rgba(7, 7, 26, .96);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            color: var(--gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .topbar-nav {
+            display: flex;
+            gap: 4px
+        }
+
+        .nav-tab {
+            padding: 7px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: .86rem;
+            font-weight: 500;
+            color: var(--txt2);
+            border: none;
+            background: transparent;
+            transition: all .2s
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, .05);
+            color: var(--txt)
+        }
+
+        .nav-tab.active {
+            background: rgba(139, 92, 246, .15);
+            color: var(--purple-l)
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .85rem;
+            color: var(--txt2)
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .8rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0
+        }
+
+        .content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            width: 100%
+        }
+
+        /* SECTIONS */
+        .section {
+            display: none
+        }
+
+        .section.active {
+            display: block
+        }
+
+        /* CARDS */
+        .panel {
+            background: var(--bg2);
+            border: var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            margin-bottom: 20px
+        }
+
+        .panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .panel-title .icon {
+            font-size: 1.1rem
+        }
+
+        /* STAT CARDS */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px
+        }
+
+        .stat {
+            background: var(--bg2);
+            border: var(--border);
+            border-radius: var(--r);
+            padding: 18px;
+            text-align: center
+        }
+
+        .stat-val {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            margin-bottom: 4px
+        }
+
+        .stat-lbl {
+            font-size: .75rem;
+            color: var(--txt2);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px
+        }
+
+        /* SERVICE STORE */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px
+        }
+
+        .service-card {
+            background: var(--bg3);
+            border: var(--border);
+            border-radius: var(--r);
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .3s, transform .3s
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px
+        }
+
+        .service-card.palm::before {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24)
+        }
+
+        .service-card.aura::before {
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa)
+        }
+
+        .service-card.coffee::before {
+            background: linear-gradient(90deg, #92400e, #b45309)
+        }
+
+        .service-card.natal::before {
+            background: linear-gradient(90deg, #d4a853, #f0d78c)
+        }
+
+        .service-card.tarot::before {
+            background: linear-gradient(90deg, #ec4899, #f472b6)
+        }
+
+        .service-card.year::before {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa)
+        }
+
+        .service-card:hover {
+            border-color: rgba(139, 92, 246, .4);
+            transform: translateY(-2px)
+        }
+
+        .service-card.owned {
+            border-color: rgba(16, 185, 129, .3);
+            background: rgba(16, 185, 129, .04)
+        }
+
+        .svc-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px
+        }
+
+        .svc-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0
+        }
+
+        .palm .svc-icon {
+            background: rgba(245, 158, 11, .15)
+        }
+
+        .aura .svc-icon {
+            background: rgba(139, 92, 246, .15)
+        }
+
+        .coffee .svc-icon {
+            background: rgba(146, 64, 14, .15)
+        }
+
+        .natal .svc-icon {
+            background: rgba(212, 168, 83, .15)
+        }
+
+        .tarot .svc-icon {
+            background: rgba(236, 72, 153, .15)
+        }
+
+        .year .svc-icon {
+            background: rgba(59, 130, 246, .15)
+        }
+
+        .svc-name {
+            font-weight: 600;
+            font-size: .92rem
+        }
+
+        .svc-price {
+            font-size: .8rem;
+            color: var(--gold);
+            margin-top: 2px;
+            font-weight: 600
+        }
+
+        .svc-desc {
+            font-size: .82rem;
+            color: var(--txt2);
+            line-height: 1.5;
+            margin-bottom: 14px
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-size: .85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all .25s;
+            font-family: 'Inter', sans-serif
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, var(--gold), var(--purple));
+            color: #fff;
+            width: 100%;
+            justify-content: center
+        }
+
+        .btn-buy:hover {
+            opacity: .9;
+            transform: translateY(-1px)
+        }
+
+        .btn-owned {
+            background: rgba(16, 185, 129, .15);
+            color: var(--green);
+            border: 1px solid rgba(16, 185, 129, .3);
+            width: 100%;
+            justify-content: center;
+            cursor: default
+        }
+
+        .btn-use {
+            background: rgba(139, 92, 246, .15);
+            color: var(--purple-l);
+            border: 1px solid rgba(139, 92, 246, .3);
+            width: 100%;
+            justify-content: center
+        }
+
+        .btn-use:hover {
+            background: rgba(139, 92, 246, .25)
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: var(--border);
+            color: var(--txt2)
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, .05);
+            color: var(--txt)
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, .12);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, .25)
+        }
+
+        .badge-new {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--purple);
+            color: #fff;
+            font-size: .65rem;
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        /* IMAGE UPLOAD AREAS */
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px
+        }
+
+        .img-category {
+            background: var(--bg3);
+            border: var(--border);
+            border-radius: var(--r);
+            padding: 20px
+        }
+
+        .img-category-title {
+            font-weight: 600;
+            font-size: .9rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .img-category-desc {
+            font-size: .78rem;
+            color: var(--txt2);
+            margin-bottom: 14px;
+            line-height: 1.4
+        }
+
+        .upload-zone {
+            border: 2px dashed rgba(255, 255, 255, .12);
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .3s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .upload-zone:hover {
+            border-color: rgba(139, 92, 246, .4);
+            background: rgba(139, 92, 246, .04)
+        }
+
+        .upload-zone input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer
+        }
+
+        .upload-zone .up-icon {
+            font-size: 2rem;
+            margin-bottom: 8px
+        }
+
+        .upload-zone p {
+            font-size: .8rem;
+            color: var(--txt2)
+        }
+
+        .upload-zone span {
+            font-size: .75rem;
+            color: var(--txt2);
+            opacity: .5;
+            display: block;
+            margin-top: 2px
+        }
+
+        .stored-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px
+        }
+
+        .stored-img {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, .05)
+        }
+
+        .stored-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .stored-img .del-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, .7);
+            border: none;
+            color: var(--red);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: .7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: .2s
+        }
+
+        .stored-img:hover .del-btn {
+            opacity: 1
+        }
+
+        .img-date {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            font-size: .65rem;
+            color: rgba(255, 255, 255, .8);
+            background: rgba(0, 0, 0, .6);
+            padding: 2px 5px;
+            border-radius: 4px
+        }
+
+        .add-img-btn {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px dashed rgba(255, 255, 255, .1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: var(--txt2);
+            transition: .3s;
+            background: transparent;
+            position: relative
+        }
+
+        .add-img-btn:hover {
+            border-color: rgba(139, 92, 246, .4);
+            color: var(--purple-l)
+        }
+
+        .add-img-btn input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer
+        }
+
+        /* HOROSCOPE HISTORY */
+        .history-item {
+            background: var(--bg3);
+            border: var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px
+        }
+
+        .hist-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            background: rgba(212, 168, 83, .1)
+        }
+
+        .hist-title {
+            font-weight: 600;
+            font-size: .88rem;
+            margin-bottom: 2px
+        }
+
+        .hist-date {
+            font-size: .75rem;
+            color: var(--txt2)
+        }
+
+        .hist-preview {
+            font-size: .82rem;
+            color: var(--txt2);
+            margin-top: 4px;
+            line-height: 1.4
+        }
+
+        .hist-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: .7rem;
+            font-weight: 600;
+            margin-right: 4px
+        }
+
+        .tag-personal {
+            background: rgba(139, 92, 246, .15);
+            color: var(--purple-l)
+        }
+
+        .tag-daily {
+            background: rgba(212, 168, 83, .15);
+            color: var(--gold)
+        }
+
+        /* PROFILE */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 20px
+        }
+
+        .profile-card {
+            background: var(--bg3);
+            border: var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            text-align: center
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 auto 14px
+        }
+
+        .profile-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            margin-bottom: 4px
+        }
+
+        .profile-email {
+            font-size: .8rem;
+            color: var(--txt2);
+            margin-bottom: 14px
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 700
+        }
+
+        .plan-free {
+            background: rgba(255, 255, 255, .08);
+            color: var(--txt2)
+        }
+
+        .plan-vip {
+            background: linear-gradient(135deg, rgba(212, 168, 83, .2), rgba(139, 92, 246, .2));
+            color: var(--gold);
+            border: 1px solid rgba(212, 168, 83, .3)
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px
+        }
+
+        label.lbl {
+            font-size: .72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold)
+        }
+
+        input.inp,
+        select.inp {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 8px;
+            padding: 9px 13px;
+            color: var(--txt);
+            font-family: 'Inter', sans-serif;
+            font-size: .88rem;
+            transition: border-color .2s;
+            width: 100%
+        }
+
+        input.inp:focus,
+        select.inp:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, .5)
+        }
+
+        /* UPGRADE CTA */
+        .upgrade-banner {
+            background: linear-gradient(135deg, rgba(212, 168, 83, .1), rgba(139, 92, 246, .1));
+            border: 1px solid rgba(212, 168, 83, .2);
+            border-radius: var(--r);
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px
+        }
+
+        .upgrade-banner h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--gold);
+            margin-bottom: 4px
+        }
+
+        .upgrade-banner p {
+            font-size: .83rem;
+            color: var(--txt2)
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center
+        }
+
+        .modal-overlay.open {
+            display: flex
+        }
+
+        .modal {
+            background: var(--bg2);
+            border: var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            position: relative
+        }
+
+        .modal h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 8px
+        }
+
+        .modal p {
+            font-size: .85rem;
+            color: var(--txt2);
+            margin-bottom: 20px;
+            line-height: 1.6
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: transparent;
+            border: var(--border);
+            color: var(--txt2);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: .85rem
+        }
+
+        .price-breakdown {
+            background: var(--bg3);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 18px
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: .85rem;
+            padding: 4px 0
+        }
+
+        .price-row.total {
+            border-top: var(--border);
+            margin-top: 6px;
+            padding-top: 10px;
+            font-weight: 700;
+            color: var(--gold)
+        }
+
+        @media(max-width:768px) {
+            .stats-row {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr
+            }
+
+            .images-grid {
+                grid-template-columns: 1fr
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr
+            }
+
+            .upgrade-banner {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <a class="logo" href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none">
+            <img src="/assets/images/logo.webp" alt="FateSpy" style="width:28px;height:28px;object-fit:contain" />
+            <span style="font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:#f0f0ff;">FateSpy<span
+                    style="color:#d4a853">.com</span></span>
+        </a>
+        <div class="topbar-nav">
+            <button class="nav-tab active" data-section="overview">&#127968; Overview</button>
+            <button class="nav-tab" data-section="services">&#127775; Services</button>
+            <button class="nav-tab" data-section="images">&#128247; My Images</button>
+            <button class="nav-tab" data-section="history">&#128203; History</button>
+            <button class="nav-tab" data-section="profile">&#128100; Profile</button>
+        </div>
+        <div class="user-pill">
+            <span>maria@example.com</span>
+            <div class="avatar">M</div>
+        </div>
+    </div>
+
+    <!-- PURCHASE MODAL -->
+    <div class="modal-overlay" id="purchase-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&#10005;</button>
+            <h2 id="modal-svc-name">Palm Reading (AI)</h2>
+            <p id="modal-svc-desc">Get an in-depth AI palm reading based on your uploaded palm photos. Results are ready
+                instantly.</p>
+            <div class="price-breakdown">
+                <div class="price-row"><span>Service</span><span id="modal-price">$4.99</span></div>
+                <div class="price-row"><span>Processing fee</span><span>$0.00</span></div>
+                <div class="price-row total"><span>Total</span><span id="modal-total">$4.99</span></div>
+            </div>
+            <button class="btn btn-buy" onclick="completePurchase()">&#128274; Secure Checkout</button>
+            <p style="text-align:center;font-size:.72rem;color:var(--txt2);margin-top:10px">Stripe • Secure • Instant
+                access</p>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- ═══ OVERVIEW ═══ -->
+        <div class="section active" id="section-overview">
+            <div class="upgrade-banner" id="upgrade-banner">
+                <div>
+                    <h3>&#9733; Upgrade to VIP</h3>
+                    <p>Unlock unlimited readings, priority AI, and all premium services for just $9.99/month.</p>
+                </div>
+                <button class="btn btn-buy" style="width:auto;padding:10px 24px"
+                    onclick="openModal('VIP Membership','Unlimited horoscopes, personalized readings, priority AI generation and all premium services included.','$9.99/month','$9.99/month')">Upgrade
+                    Now</button>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-val">12</div>
+                    <div class="stat-lbl">Readings done</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">3</div>
+                    <div class="stat-lbl">Services owned</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">&#9800;</div>
+                    <div class="stat-lbl">Pisces</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-val">Free</div>
+                    <div class="stat-lbl">Current plan</div>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">&#128302;</span> Today's Reading</div>
+                    <div
+                        style="background:linear-gradient(135deg,rgba(212,168,83,.06),rgba(139,92,246,.06));border:1px solid rgba(212,168,83,.12);border-radius:10px;padding:16px;margin-bottom:12px">
+                        <div
+                            style="font-size:.75rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">
+                            &#9829; Love &amp; Relationships</div>
+                        <div style="font-size:.88rem;color:var(--txt2);line-height:1.6">The stars align to bring deep
+                            emotional clarity today. Open your heart to receiving love as freely as you give it...</div>
+                    </div>
+                    <a href="/#general-horoscope"
+                        style="color:var(--purple-l);font-size:.82rem;text-decoration:none">View full horoscope
+                        &#8594;</a>
+                </div>
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">&#128275;</span> My Services</div>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg3);border-radius:8px">
+                            <div style="display:flex;align-items:center;gap:10px"><span
+                                    style="font-size:1.2rem">&#128071;</span>
+                                <div>
+                                    <div style="font-size:.85rem;font-weight:600">Palm Reading</div>
+                                    <div style="font-size:.72rem;color:var(--txt2)">3 readings used</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-use" style="width:auto;padding:6px 12px;font-size:.78rem"
+                                onclick="goSection('images')">Use</button>
+                        </div>
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg3);border-radius:8px">
+                            <div style="display:flex;align-items:center;gap:10px"><span
+                                    style="font-size:1.2rem">&#9749;</span>
+                                <div>
+                                    <div style="font-size:.85rem;font-weight:600">Coffee Reading</div>
+                                    <div style="font-size:.72rem;color:var(--txt2)">1 reading used</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-use" style="width:auto;padding:6px 12px;font-size:.78rem"
+                                onclick="goSection('images')">Use</button>
+                        </div>
+                        <button class="btn btn-ghost" style="font-size:.8rem;margin-top:4px"
+                            onclick="goSection('services')">&#43; Browse more services</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ SERVICES STORE ═══ -->
+        <div class="section" id="section-services">
+            <div class="panel-title" style="font-family:'Cinzel',serif;font-size:1.2rem;margin-bottom:20px">&#127775;
+                Services &amp; Extra Readings</div>
+
+            <div class="services-grid">
+                <!-- Palm Reading -->
+                <div class="service-card palm owned">
+                    <div class="svc-header">
+                        <div class="svc-icon">&#128071;</div>
+                        <div>
+                            <div class="svc-name">Palm Reading (AI)</div>
+                            <div class="svc-price">$4.99 — Owned</div>
+                        </div>
+                    </div>
+                    <div class="svc-desc">Upload photos of your left and right palm. Our AI analyzes life lines, heart
+                        lines, and mounts to reveal your destiny.</div>
+                    <button class="btn btn-use" onclick="goSection('images')">&#128247; Upload Palm Photos</button>
+                </div>
+
+                <!-- Aura Scan -->
+                <div class="service-card aura">
+                    <div class="badge-new">New</div>
+                    <div class="svc-header">
+                        <div class="svc-icon">&#129498;</div>
+                        <div>
+                            <div class="svc-name">Aura Scan (AI)</div>
+                            <div class="svc-price">$4.99</div>
+                        </div>
+                    </div>
+                    <div class="svc-desc">Upload a selfie and let our AI decode the colors and energy of your aura,
+                        revealing your emotional and spiritual state.</div>
+                    <button class="btn btn-buy"
+                        onclick="openModal('Aura Scan (AI)','Upload a selfie and get an AI analysis of your aura colors, energy field, and spiritual state.','$4.99','$4.99')">&#128274;
+                        Buy Now</button>
+                </div>
+
+                <!-- Coffee Reading -->
+                <div class="service-card coffee owned">
+                    <div class="svc-header">
+                        <div class="svc-icon">&#9749;</div>
+                        <div>
+                            <div class="svc-name">Coffee Reading (AI)</div>
+                            <div class="svc-price">$2.99 — Owned</div>
+                        </div>
+                    </div>
+                    <div class="svc-desc">Photograph the inside of your espresso or Turkish coffee cup and receive a
+                        detailed AI interpretation of the symbols.</div>
+                    <button class="btn btn-use" onclick="goSection('images')">&#128247; Upload Cup Photo</button>
+                </div>
+
+                <!-- Natal Chart -->
+                <div class="service-card natal">
+                    <div class="svc-header">
+                        <div class="svc-icon">&#127775;</div>
+                        <div>
+                            <div class="svc-name">Personal Natal Chart</div>
+                            <div class="svc-price">$9.99</div>
+                        </div>
+                    </div>
+                    <div class="svc-desc">Receive a comprehensive 20-page natal chart analysis including planetary
+                        positions, houses, aspects, and life path insights.</div>
+                    <button class="btn btn-buy"
+                        onclick="openModal('Personal Natal Chart','A comprehensive 20-page natal chart covering all planetary positions, houses, aspects and your life path.','$9.99','$9.99')">&#128274;
+                        Buy Now</button>
+                </div>
+
+                <!-- Tarot Session -->
+                <div class="service-card tarot">
+                    <div class="svc-header">
+                        <div class="svc-icon">&#127183;</div>
+                        <div>
+                            <div class="svc-name">AI Tarot Session</div>
+                            <div class="svc-price">$3.99</div>
+                        </div>
+                    </div>
+                    <div class="svc-desc">A full 10-card Celtic Cross tarot spread interpreted by AI. Ask any question
+                        and receive a deep, personalized reading.</div>
+                    <button class="btn btn-buy"
+                        onclick="openModal('AI Tarot Session','Full 10-card Celtic Cross spread with personalized AI interpretation for any question you ask.','$3.99','$3.99')">&#128274;
+                        Buy Now</button>
+                </div>
+
+                <!-- Year Ahead Report -->
+                <div class="service-card year">
+                    <div class="svc-header">
+                        <div class="svc-icon">&#128336;</div>
+                        <div>
+                            <div class="svc-name">Year Ahead Report</div>
+                            <div class="svc-price">$29.99</div>
+                        </div>
+                    </div>
+                    <div class="svc-desc">A detailed 12-month forecast covering love, career, finances, health and major
+                        transits — personalized for your exact birth data.</div>
+                    <button class="btn btn-buy"
+                        onclick="openModal('Year Ahead Report','12-month personalized forecast covering all life areas based on your birth chart and upcoming planetary transits.','$29.99','$29.99')">&#128274;
+                        Buy Now</button>
+                </div>
+            </div>
+
+            <!-- VIP Plan -->
+            <div
+                style="margin-top:24px;background:linear-gradient(135deg,rgba(212,168,83,.08),rgba(139,92,246,.08));border:1px solid rgba(212,168,83,.2);border-radius:var(--r);padding:28px;text-align:center">
+                <div style="font-size:1.5rem;margin-bottom:8px">&#9889;</div>
+                <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:8px">VIP
+                    Membership — $9.99/month</div>
+                <div
+                    style="font-size:.85rem;color:var(--txt2);margin-bottom:18px;max-width:500px;margin-left:auto;margin-right:auto">
+                    Get everything: unlimited horoscopes, all AI readings, natal chart, tarot sessions, and priority
+                    generation.</div>
+                <button class="btn btn-buy" style="padding:12px 32px"
+                    onclick="openModal('VIP Membership','Unlimited access to all services and features: horoscopes, palm reading, aura scan, coffee reading, natal chart, tarot — all included.','$9.99/month','$9.99/month')">Get
+                    VIP Access</button>
+            </div>
+        </div>
+
+        <!-- ═══ MY IMAGES ═══ -->
+        <div class="section" id="section-images">
+            <div class="panel-title" style="font-family:'Cinzel',serif;font-size:1.2rem;margin-bottom:20px">&#128247;
+                Stored Images</div>
+            <p style="font-size:.85rem;color:var(--txt2);margin-bottom:20px">Images are used for AI readings. They are
+                stored securely and only visible to you.</p>
+
+            <div class="images-grid">
+
+                <!-- Left Palm -->
+                <div class="img-category">
+                    <div class="img-category-title">&#128071; Left Palm</div>
+                    <div class="img-category-desc">Used for: <strong style="color:var(--txt)">Palm Reading AI</strong> —
+                        the left hand reveals your innate potential and inherited traits.</div>
+                    <div class="stored-images" id="grid-left-palm">
+                        <div class="stored-img">
+                            <img src="https://placehold.co/200x200/1a1a3e/d4a853?text=L.Palm+1" alt="Left palm 1" />
+                            <span class="img-date">Feb 20</span>
+                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
+                        </div>
+                        <div class="add-img-btn">
+                            &#43;
+                            <input type="file" accept="image/*" onchange="addImg(this,'grid-left-palm')" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Palm -->
+                <div class="img-category">
+                    <div class="img-category-title">&#128072; Right Palm</div>
+                    <div class="img-category-desc">Used for: <strong style="color:var(--txt)">Palm Reading AI</strong> —
+                        the right hand shows your current life path and choices.</div>
+                    <div class="stored-images" id="grid-right-palm">
+                        <div class="stored-img">
+                            <img src="https://placehold.co/200x200/1a1a3e/d4a853?text=R.Palm+1" alt="Right palm 1" />
+                            <span class="img-date">Feb 20</span>
+                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
+                        </div>
+                        <div class="add-img-btn">
+                            &#43;
+                            <input type="file" accept="image/*" onchange="addImg(this,'grid-right-palm')" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Face / Aura -->
+                <div class="img-category">
+                    <div class="img-category-title">&#129498; Face — Aura Reading</div>
+                    <div class="img-category-desc">Used for: <strong style="color:var(--txt)">Aura Scan AI</strong> — a
+                        clear selfie in natural light for best aura detection results.</div>
+                    <div class="stored-images" id="grid-aura">
+                        <div class="add-img-btn" style="aspect-ratio:1">
+                            &#43;
+                            <input type="file" accept="image/*" onchange="addImg(this,'grid-aura')" />
+                        </div>
+                    </div>
+                    <div style="margin-top:10px;font-size:.75rem;color:var(--txt2);opacity:.6">No face images uploaded
+                        yet. <span style="color:var(--purple-l);cursor:pointer"
+                            onclick="document.querySelector('#grid-aura input').click()">Upload now</span></div>
+                </div>
+
+                <!-- Coffee Cup -->
+                <div class="img-category">
+                    <div class="img-category-title">&#9749; Coffee Cup</div>
+                    <div class="img-category-desc">Used for: <strong style="color:var(--txt)">Coffee Reading AI</strong>
+                        — photograph the inside of the cup after drinking. Tip it to drain grounds first.</div>
+                    <div class="stored-images" id="grid-coffee">
+                        <div class="stored-img">
+                            <img src="https://placehold.co/200x200/1a1a3e/b45309?text=Cup+1" alt="Coffee cup 1" />
+                            <span class="img-date">Feb 25</span>
+                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
+                        </div>
+                        <div class="stored-img">
+                            <img src="https://placehold.co/200x200/1a1a3e/b45309?text=Cup+2" alt="Coffee cup 2" />
+                            <span class="img-date">Feb 10</span>
+                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
+                        </div>
+                        <div class="add-img-btn">
+                            &#43;
+                            <input type="file" accept="image/*" onchange="addImg(this,'grid-coffee')" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div
+                style="margin-top:20px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:10px;padding:16px;font-size:.82rem;color:var(--txt2)">
+                &#128274; <strong style="color:var(--txt)">Privacy:</strong> Your images are encrypted at rest and used
+                exclusively for AI reading generation. They are never shared or used for training AI models. You can
+                delete them at any time.
+            </div>
+        </div>
+
+        <!-- ═══ HISTORY ═══ -->
+        <div class="section" id="section-history">
+            <div class="panel-title" style="font-family:'Cinzel',serif;font-size:1.2rem;margin-bottom:20px">&#128203;
+                Reading History</div>
+
+            <div class="history-item">
+                <div class="hist-icon">&#128302;</div>
+                <div style="flex:1">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                        <div class="hist-title">Personal Horoscope — Pisces</div>
+                        <span class="hist-tag tag-personal">Personal</span>
+                    </div>
+                    <div class="hist-date">Feb 27, 2026 — 11:42</div>
+                    <div class="hist-preview">"The cosmic tides are shifting in your favor. Venus entering your 7th
+                        house brings new romantic possibilities..."</div>
+                </div>
+                <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
+            </div>
+
+            <div class="history-item">
+                <div class="hist-icon">&#128071;</div>
+                <div style="flex:1">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                        <div class="hist-title">Palm Reading — Left &amp; Right</div>
+                        <span class="hist-tag tag-personal">AI Service</span>
+                    </div>
+                    <div class="hist-date">Feb 20, 2026 — 09:15</div>
+                    <div class="hist-preview">"Your life line shows remarkable resilience. The break at the midpoint
+                        suggests a significant life transition around age 35..."</div>
+                </div>
+                <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
+            </div>
+
+            <div class="history-item">
+                <div class="hist-icon">&#9749;</div>
+                <div style="flex:1">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                        <div class="hist-title">Coffee Cup Reading</div>
+                        <span class="hist-tag tag-personal">AI Service</span>
+                    </div>
+                    <div class="hist-date">Feb 10, 2026 — 18:30</div>
+                    <div class="hist-preview">"A serpent symbol near the rim indicates transformation is imminent. The
+                        butterfly at the base points to creative renewal..."</div>
+                </div>
+                <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
+            </div>
+
+            <div class="history-item">
+                <div class="hist-icon">&#127775;</div>
+                <div style="flex:1">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                        <div class="hist-title">Daily Horoscope — Pisces</div>
+                        <span class="hist-tag tag-daily">General</span>
+                    </div>
+                    <div class="hist-date">Feb 27, 2026 — 08:00</div>
+                    <div class="hist-preview">"Today your empathy draws people closer. Trust your heart's intuition in
+                        career decisions..."</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ PROFILE ═══ -->
+        <div class="section" id="section-profile">
+            <div class="profile-grid">
+                <div>
+                    <div class="profile-card">
+                        <div class="profile-avatar">M</div>
+                        <div class="profile-name">Maria Ionescu</div>
+                        <div class="profile-email">maria@example.com</div>
+                        <span class="plan-badge plan-free">Free Plan</span>
+                        <div style="margin-top:16px;padding-top:16px;border-top:var(--border)">
+                            <button class="btn btn-buy" style="width:100%;margin-bottom:8px"
+                                onclick="goSection('services')">&#9733; Upgrade to VIP</button>
+                            <button class="btn btn-danger" style="width:100%;font-size:.8rem">Sign Out</button>
+                        </div>
+                    </div>
+                    <div class="panel" style="margin-top:16px;padding:16px">
+                        <div
+                            style="font-size:.78rem;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">
+                            Account Stats</div>
+                        <div
+                            style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem">
+                            <span style="color:var(--txt2)">Member since</span><strong>Jan 15, 2026</strong>
+                        </div>
+                        <div
+                            style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem">
+                            <span style="color:var(--txt2)">Total readings</span><strong>12</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.83rem"><span
+                                style="color:var(--txt2)">Services owned</span><strong>3</strong></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="panel">
+                        <div class="panel-title"><span class="icon">&#128100;</span> Edit Profile</div>
+                        <div class="form-group"><label class="lbl">Full Name</label><input class="inp"
+                                value="Maria Ionescu" /></div>
+                        <div class="form-group"><label class="lbl">Email</label><input class="inp" type="email"
+                                value="maria@example.com" /></div>
+                        <div class="form-group"><label class="lbl">Zodiac Sign</label>
+                            <select class="inp">
+                                <option>Pisces &#9803;</option>
+                                <option>Aries &#9800;</option>
+                                <option>Taurus &#9801;</option>
+                                <option>Gemini &#9802;</option>
+                                <option>Cancer &#9803;</option>
+                                <option>Leo &#9804;</option>
+                                <option>Virgo &#9805;</option>
+                                <option>Libra &#9806;</option>
+                                <option>Scorpio &#9807;</option>
+                                <option>Sagittarius &#9808;</option>
+                                <option>Capricorn &#9809;</option>
+                                <option>Aquarius &#9810;</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label class="lbl">Date of Birth</label><input class="inp" type="date"
+                                value="1990-03-15" /></div>
+                        <div class="form-group"><label class="lbl">Language</label>
+                            <select class="inp">
+                                <option>English</option>
+                                <option>Romanian</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-buy" style="margin-top:4px">&#128190; Save Profile</button>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title"><span class="icon">&#128274;</span> Change Password</div>
+                        <div class="form-group"><label class="lbl">Current Password</label><input class="inp"
+                                type="password"
+                                placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" /></div>
+                        <div class="form-group"><label class="lbl">New Password</label><input class="inp"
+                                type="password"
+                                placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" /></div>
+                        <div class="form-group"><label class="lbl">Confirm New Password</label><input class="inp"
+                                type="password"
+                                placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" /></div>
+                        <button class="btn btn-ghost" style="margin-top:4px">Update Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('section-' + tab.dataset.section).classList.add('active');
+            });
+        });
+        function goSection(id) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelector('[data-section="' + id + '"]').classList.add('active');
+            document.getElementById('section-' + id).classList.add('active');
+        }
+
+        // Purchase modal
+        function openModal(name, desc, price, total) {
+            document.getElementById('modal-svc-name').textContent = name;
+            document.getElementById('modal-svc-desc').textContent = desc;
+            document.getElementById('modal-price').textContent = price;
+            document.getElementById('modal-total').textContent = total;
+            document.getElementById('purchase-modal').classList.add('open');
+        }
+        function closeModal() {
+            document.getElementById('purchase-modal').classList.remove('open');
+        }
+        function completePurchase() {
+            closeModal();
+            alert('Redirecting to Stripe checkout...\n(In production this will redirect to a Stripe Checkout session)');
+        }
+        document.getElementById('purchase-modal').addEventListener('click', e => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+
+        // Image management
+        function addImg(input, gridId) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const grid = document.getElementById(gridId);
+                const addBtn = grid.querySelector('.add-img-btn');
+                const div = document.createElement('div');
+                div.className = 'stored-img';
+                const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                div.innerHTML = `<img src="${e.target.result}" alt="Uploaded"/><span class="img-date">${today}</span><button class="del-btn" onclick="delImg(this)">&#10005;</button>`;
+                grid.insertBefore(div, addBtn);
+            };
+            reader.readAsDataURL(file);
+            input.value = '';
+        }
+        function delImg(btn) {
+            if (confirm('Remove this image?')) btn.closest('.stored-img').remove();
+        }
+    </script>
+</body>
+
+</html>

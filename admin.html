@@ -1,0 +1,1363 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>FateSpy Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #07071a;
+            --bg2: #0d0f2a;
+            --bg3: #12143a;
+            --gold: #d4a853;
+            --purple: #8b5cf6;
+            --purple-l: #a78bfa;
+            --green: #10b981;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --txt: #f0f0ff;
+            --txt2: rgba(240, 240, 255, .6);
+            --border: 1px solid rgba(255, 255, 255, .08);
+            --r: 12px;
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            display: flex;
+            min-height: 100vh
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            background: var(--bg2);
+            border-right: var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 50
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px 20px;
+            border-bottom: var(--border);
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--gold)
+        }
+
+        .sidebar-logo span {
+            font-size: .7rem;
+            font-weight: 400;
+            color: var(--txt2);
+            display: block;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 2px
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 20px;
+            cursor: pointer;
+            color: var(--txt2);
+            font-size: .9rem;
+            font-weight: 500;
+            transition: all .2s;
+            border-left: 3px solid transparent
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, .04);
+            color: var(--txt)
+        }
+
+        .nav-item.active {
+            background: rgba(139, 92, 246, .1);
+            color: var(--purple-l);
+            border-left-color: var(--purple)
+        }
+
+        .nav-item .icon {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center
+        }
+
+        .nav-section {
+            font-size: .65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--txt2);
+            padding: 16px 20px 6px;
+            opacity: .5
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px 20px;
+            border-top: var(--border)
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh
+        }
+
+        .topbar {
+            padding: 16px 28px;
+            border-bottom: var(--border);
+            background: rgba(7, 7, 26, .95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .topbar h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            color: var(--txt)
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 14px
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .content {
+            padding: 28px;
+            flex: 1
+        }
+
+        /* CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px
+        }
+
+        .stat-card {
+            background: var(--bg2);
+            border: var(--border);
+            border-radius: var(--r);
+            padding: 20px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px
+        }
+
+        .stat-card.gold::before {
+            background: linear-gradient(90deg, var(--gold), #f0d78c)
+        }
+
+        .stat-card.purple::before {
+            background: linear-gradient(90deg, var(--purple), var(--purple-l))
+        }
+
+        .stat-card.green::before {
+            background: linear-gradient(90deg, var(--green), #34d399)
+        }
+
+        .stat-card.blue::before {
+            background: linear-gradient(90deg, var(--blue), #60a5fa)
+        }
+
+        .stat-label {
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--txt2);
+            margin-bottom: 8px
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Cinzel', serif
+        }
+
+        .stat-card.gold .stat-value {
+            color: var(--gold)
+        }
+
+        .stat-card.purple .stat-value {
+            color: var(--purple-l)
+        }
+
+        .stat-card.green .stat-value {
+            color: var(--green)
+        }
+
+        .stat-card.blue .stat-value {
+            color: var(--blue)
+        }
+
+        .stat-delta {
+            font-size: .78rem;
+            color: var(--green);
+            margin-top: 4px
+        }
+
+        .panel {
+            background: var(--bg2);
+            border: var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            margin-bottom: 24px
+        }
+
+        .panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            color: var(--txt);
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .panel-title .badge {
+            font-family: 'Inter', sans-serif;
+            font-size: .7rem;
+            background: rgba(139, 92, 246, .2);
+            color: var(--purple-l);
+            padding: 2px 8px;
+            border-radius: 20px
+        }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .88rem
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--txt2);
+            border-bottom: var(--border)
+        }
+
+        td {
+            padding: 11px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            color: var(--txt2)
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, .02);
+            color: var(--txt)
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: .72rem;
+            font-weight: 600
+        }
+
+        .badge-status.ok {
+            background: rgba(16, 185, 129, .15);
+            color: var(--green)
+        }
+
+        .badge-status.warn {
+            background: rgba(245, 158, 11, .15);
+            color: #f59e0b
+        }
+
+        .badge-status.err {
+            background: rgba(239, 68, 68, .15);
+            color: var(--red)
+        }
+
+        /* FORMS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .form-group.full {
+            grid-column: 1/-1
+        }
+
+        label.lbl {
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold)
+        }
+
+        input.inp,
+        select.inp,
+        textarea.inp {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--txt);
+            font-family: 'Inter', sans-serif;
+            font-size: .9rem;
+            transition: border-color .2s;
+            width: 100%
+        }
+
+        input.inp:focus,
+        select.inp:focus,
+        textarea.inp:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, .5)
+        }
+
+        textarea.inp {
+            resize: vertical;
+            min-height: 90px
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-size: .88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all .25s
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--purple));
+            color: #fff
+        }
+
+        .btn-primary:hover {
+            opacity: .9;
+            transform: translateY(-1px)
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: var(--border);
+            color: var(--txt2)
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, .05);
+            color: var(--txt)
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, .15);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, .3)
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, .25)
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: .8rem
+        }
+
+        /* API KEY CARDS */
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px
+        }
+
+        .api-card {
+            background: var(--bg3);
+            border: var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .api-card-head {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .api-provider-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem
+        }
+
+        .api-provider-name {
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .api-provider-model {
+            font-size: .75rem;
+            color: var(--txt2)
+        }
+
+        .api-key-row {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .api-key-row input {
+            flex: 1;
+            font-size: .82rem;
+            font-family: monospace;
+            letter-spacing: .5px
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, .06);
+            border: var(--border);
+            color: var(--txt2);
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: .8rem;
+            transition: all .2s;
+            white-space: nowrap
+        }
+
+        .toggle-btn:hover {
+            color: var(--txt)
+        }
+
+        /* EMAIL TEMPLATE EDITOR */
+        .template-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px
+        }
+
+        .template-item {
+            background: var(--bg3);
+            border: var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .template-item:hover {
+            border-color: rgba(139, 92, 246, .3)
+        }
+
+        .template-item.selected {
+            border-color: var(--purple);
+            background: rgba(139, 92, 246, .08)
+        }
+
+        .chip {
+            display: inline-block;
+            background: rgba(212, 168, 83, .12);
+            color: var(--gold);
+            border-radius: 4px;
+            padding: 1px 7px;
+            font-size: .7rem;
+            font-weight: 600;
+            font-family: monospace
+        }
+
+        /* TOGGLE SWITCH */
+        .toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            cursor: pointer
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0
+        }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, .12);
+            border-radius: 11px;
+            transition: .3s
+        }
+
+        .toggle input:checked~.toggle-track {
+            background: var(--purple)
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            transition: .3s
+        }
+
+        .toggle input:checked~.toggle-thumb {
+            left: 21px
+        }
+
+        /* SECTIONS */
+        .section {
+            display: none
+        }
+
+        .section.active {
+            display: block
+        }
+
+        /* ACTIVITY FEED */
+        .feed-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .04)
+        }
+
+        .feed-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 5px;
+            flex-shrink: 0
+        }
+
+        .feed-text {
+            font-size: .85rem;
+            color: var(--txt2)
+        }
+
+        .feed-text strong {
+            color: var(--txt)
+        }
+
+        .feed-time {
+            font-size: .75rem;
+            color: var(--txt2);
+            opacity: .5;
+            margin-top: 2px
+        }
+
+        @media(max-width:900px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main {
+                margin-left: 0
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .api-grid {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="/" style="display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:4px">
+                <img src="/assets/images/logo.webp" alt="FateSpy" style="width:24px;height:24px;object-fit:contain" />
+                <span
+                    style="font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;color:#f0f0ff;text-transform:none;letter-spacing:normal;">FateSpy<span
+                        style="color:#d4a853;letter-spacing:normal;">.com</span></span>
+            </a>
+            <span>Admin Panel</span>
+        </div>
+
+        <div class="nav-section">Overview</div>
+        <div class="nav-item active" data-section="dashboard"><span class="icon">&#9783;</span> Dashboard</div>
+        <div class="nav-item" data-section="users"><span class="icon">&#128101;</span> Users</div>
+
+        <div class="nav-section">AI &amp; Content</div>
+        <div class="nav-item" data-section="api-keys"><span class="icon">&#128273;</span> AI API Keys</div>
+        <div class="nav-item" data-section="content"><span class="icon">&#9997;</span> Horoscope Content</div>
+
+        <div class="nav-section">Communications</div>
+        <div class="nav-item" data-section="emails"><span class="icon">&#9993;</span> Email Management</div>
+        <div class="nav-item" data-section="templates"><span class="icon">&#128196;</span> Email Templates</div>
+
+        <div class="nav-section">System</div>
+        <div class="nav-item" data-section="subscriptions"><span class="icon">&#128179;</span> Subscriptions</div>
+        <div class="nav-item" data-section="settings"><span class="icon">&#9881;</span> Settings</div>
+
+        <div class="sidebar-footer">
+            <div style="font-size:.78rem;color:var(--txt2)">Logged as <strong style="color:var(--txt)">admin</strong>
+            </div>
+            <a href="/"
+                style="font-size:.78rem;color:var(--txt2);text-decoration:none;display:block;margin-top:6px">&#8592;
+                Back to site</a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <h1 id="page-title">Dashboard</h1>
+            <div class="topbar-right">
+                <span style="font-size:.8rem;color:var(--txt2)" id="clock"></span>
+                <div class="avatar">A</div>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- ═══ DASHBOARD ═══ -->
+            <div class="section active" id="section-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card gold">
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-value">1,284</div>
+                        <div class="stat-delta">&#8593; +42 this week</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-label">AI Requests / day</div>
+                        <div class="stat-value">847</div>
+                        <div class="stat-delta">&#8593; +12% vs yesterday</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-label">Revenue (month)</div>
+                        <div class="stat-value">$2,340</div>
+                        <div class="stat-delta">&#8593; +8% vs last month</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-label">Emails Sent</div>
+                        <div class="stat-value">3,901</div>
+                        <div class="stat-delta">Open rate: 42%</div>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
+                    <div class="panel">
+                        <div class="panel-title">&#128200; Recent Activity</div>
+                        <div class="feed-item">
+                            <div class="feed-dot" style="background:var(--green)"></div>
+                            <div>
+                                <div class="feed-text"><strong>user@email.com</strong> requested a personal horoscope
+                                </div>
+                                <div class="feed-time">2 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-dot" style="background:var(--gold)"></div>
+                            <div>
+                                <div class="feed-text"><strong>new_user@test.ro</strong> registered</div>
+                                <div class="feed-time">11 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-dot" style="background:var(--purple)"></div>
+                            <div>
+                                <div class="feed-text">Horoscope generation script completed — <strong>48
+                                        readings</strong> updated</div>
+                                <div class="feed-time">Today at 06:00</div>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-dot" style="background:var(--blue)"></div>
+                            <div>
+                                <div class="feed-text"><strong>3 emails</strong> failed to deliver (bounced)</div>
+                                <div class="feed-time">Yesterday, 14:32</div>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-dot" style="background:var(--green)"></div>
+                            <div>
+                                <div class="feed-text"><strong>maria@example.com</strong> purchased Palmistry VIP</div>
+                                <div class="feed-time">Yesterday, 09:10</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">&#9881; System Status</div>
+                        <div style="display:flex;flex-direction:column;gap:10px">
+                            <div style="display:flex;justify-content:space-between;align-items:center"><span
+                                    style="font-size:.85rem">Groq API</span><span class="badge-status ok">&#10003;
+                                    Online</span></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center"><span
+                                    style="font-size:.85rem">OpenAI API</span><span class="badge-status ok">&#10003;
+                                    Online</span></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center"><span
+                                    style="font-size:.85rem">Email (SMTP)</span><span class="badge-status warn">&#9888;
+                                    Slow</span></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center"><span
+                                    style="font-size:.85rem">Horoscope JSON</span><span class="badge-status ok">&#10003;
+                                    Fresh</span></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center"><span
+                                    style="font-size:.85rem">Image Storage</span><span class="badge-status ok">&#10003;
+                                    Online</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ AI API KEYS ═══ -->
+            <div class="section" id="section-api-keys">
+                <div class="panel">
+                    <div class="panel-title">&#128273; AI Provider API Keys <span class="badge">10 providers</span>
+                    </div>
+                    <p style="font-size:.85rem;color:var(--txt2);margin-bottom:20px">Keys are stored encrypted. Only the
+                        last 4 characters are shown after saving.</p>
+                    <div class="api-grid" id="api-keys-grid">
+                        <!-- populated by JS -->
+                    </div>
+                    <div style="margin-top:20px;padding-top:16px;border-top:var(--border);display:flex;gap:10px">
+                        <button class="btn btn-primary" onclick="saveAllKeys()">&#128190; Save All Keys</button>
+                        <button class="btn btn-ghost" onclick="testAllKeys()">&#9654; Test All Connections</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ USERS ═══ -->
+            <div class="section" id="section-users">
+                <div class="panel">
+                    <div class="panel-title">&#128101; User Management</div>
+                    <div style="display:flex;gap:10px;margin-bottom:16px">
+                        <input class="inp" placeholder="Search users..." style="max-width:280px" />
+                        <select class="inp" style="max-width:150px">
+                            <option>All roles</option>
+                            <option>Admin</option>
+                            <option>VIP</option>
+                            <option>Free</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm">&#43; Add User</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Readings</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>maria@example.com</td>
+                                <td>VIP</td>
+                                <td>Jan 15, 2026</td>
+                                <td>47</td>
+                                <td><span class="badge-status ok">Active</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                            <tr>
+                                <td>ion.popescu@gmail.com</td>
+                                <td>Free</td>
+                                <td>Feb 02, 2026</td>
+                                <td>8</td>
+                                <td><span class="badge-status ok">Active</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                            <tr>
+                                <td>test@user.ro</td>
+                                <td>Free</td>
+                                <td>Feb 27, 2026</td>
+                                <td>1</td>
+                                <td><span class="badge-status warn">Unverified</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ═══ EMAIL MANAGEMENT ═══ -->
+            <div class="section" id="section-emails">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                    <div class="panel">
+                        <div class="panel-title">&#9993; SMTP Configuration</div>
+                        <div style="display:flex;flex-direction:column;gap:12px">
+                            <div class="form-group"><label class="lbl">SMTP Host</label><input class="inp"
+                                    value="smtp.sendgrid.net" /></div>
+                            <div class="form-group"><label class="lbl">Port</label><input class="inp" value="587" />
+                            </div>
+                            <div class="form-group"><label class="lbl">Username</label><input class="inp"
+                                    value="apikey" /></div>
+                            <div class="form-group"><label class="lbl">Password / API Key</label><input class="inp"
+                                    type="password" value="SG.xxxxx" /></div>
+                            <div class="form-group"><label class="lbl">From Address</label><input class="inp"
+                                    value="hello@fatespy.com" /></div>
+                            <div style="display:flex;gap:10px;margin-top:4px">
+                                <button class="btn btn-primary">&#128190; Save SMTP</button>
+                                <button class="btn btn-ghost">&#9654; Send Test Email</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">&#128200; Email Stats</div>
+                        <div style="display:flex;flex-direction:column;gap:14px">
+                            <div style="display:flex;justify-content:space-between"><span style="color:var(--txt2)">Sent
+                                    this month</span><strong>3,901</strong></div>
+                            <div style="display:flex;justify-content:space-between"><span
+                                    style="color:var(--txt2)">Delivered</span><strong
+                                    style="color:var(--green)">3,847</strong></div>
+                            <div style="display:flex;justify-content:space-between"><span
+                                    style="color:var(--txt2)">Bounced</span><strong style="color:var(--red)">54</strong>
+                            </div>
+                            <div style="display:flex;justify-content:space-between"><span style="color:var(--txt2)">Open
+                                    rate</span><strong style="color:var(--gold)">42%</strong></div>
+                            <div style="display:flex;justify-content:space-between"><span
+                                    style="color:var(--txt2)">Click rate</span><strong
+                                    style="color:var(--purple-l)">18%</strong></div>
+                        </div>
+                        <div style="margin-top:20px;padding-top:16px;border-top:var(--border)">
+                            <div class="panel-title" style="font-size:.9rem;margin-bottom:12px">&#128073; Send Campaign
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:10px">
+                                <div class="form-group"><label class="lbl">Segment</label>
+                                    <select class="inp">
+                                        <option>All Users</option>
+                                        <option>VIP Users</option>
+                                        <option>Free Users</option>
+                                        <option>Inactive (30d)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label class="lbl">Template</label>
+                                    <select class="inp">
+                                        <option>Weekly Horoscope Digest</option>
+                                        <option>Welcome Email</option>
+                                        <option>Promo — Special Reading</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary">&#9993; Send Campaign</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">&#128203; Recent Emails</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>To</th>
+                                <th>Template</th>
+                                <th>Sent</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>maria@example.com</td>
+                                <td>Weekly Horoscope</td>
+                                <td>Feb 27, 2026 08:00</td>
+                                <td><span class="badge-status ok">Delivered</span></td>
+                            </tr>
+                            <tr>
+                                <td>ion.popescu@gmail.com</td>
+                                <td>Welcome Email</td>
+                                <td>Feb 02, 2026 14:22</td>
+                                <td><span class="badge-status ok">Opened</span></td>
+                            </tr>
+                            <tr>
+                                <td>noemail@bad.xyz</td>
+                                <td>Promo Reading</td>
+                                <td>Feb 01, 2026 09:00</td>
+                                <td><span class="badge-status err">Bounced</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ═══ EMAIL TEMPLATES ═══ -->
+            <div class="section" id="section-templates">
+                <div style="display:grid;grid-template-columns:280px 1fr;gap:20px">
+                    <div class="panel" style="height:fit-content">
+                        <div class="panel-title">&#128196; Templates</div>
+                        <div class="template-list">
+                            <div class="template-item selected" onclick="selectTemplate(this,'welcome')">
+                                <div>
+                                    <div style="font-weight:600;font-size:.88rem">Welcome Email</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: on register</div>
+                                </div>
+                            </div>
+                            <div class="template-item" onclick="selectTemplate(this,'weekly')">
+                                <div>
+                                    <div style="font-weight:600;font-size:.88rem">Weekly Horoscope</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: every Monday</div>
+                                </div>
+                            </div>
+                            <div class="template-item" onclick="selectTemplate(this,'promo')">
+                                <div>
+                                    <div style="font-weight:600;font-size:.88rem">Promo — Special Reading</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Manual campaign</div>
+                                </div>
+                            </div>
+                            <div class="template-item" onclick="selectTemplate(this,'verify')">
+                                <div>
+                                    <div style="font-weight:600;font-size:.88rem">Email Verification</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: on register</div>
+                                </div>
+                            </div>
+                            <div class="template-item" onclick="selectTemplate(this,'reset')">
+                                <div>
+                                    <div style="font-weight:600;font-size:.88rem">Password Reset</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: user request</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-ghost" style="width:100%">&#43; New Template</button>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">&#9997; Edit Template: <span id="tpl-name">Welcome Email</span></div>
+                        <div
+                            style="background:rgba(212,168,83,.06);border:1px solid rgba(212,168,83,.15);border-radius:8px;padding:12px;margin-bottom:16px;font-size:.82rem;color:var(--txt2)">
+                            <strong style="color:var(--gold)">Available variables:</strong>
+                            <span class="chip">{{name}}</span> <span class="chip">{{email}}</span> <span
+                                class="chip">{{zodiac}}</span> <span class="chip">{{date}}</span> <span
+                                class="chip">{{horoscope_link}}</span> <span class="chip">{{unsubscribe_link}}</span>
+                            <span class="chip">{{promo_code}}</span>
+                        </div>
+                        <div class="form-grid" style="margin-bottom:14px">
+                            <div class="form-group"><label class="lbl">Subject</label><input class="inp"
+                                    value="Welcome to FateSpy, {{name}}! Your destiny awaits &#128302;" /></div>
+                            <div class="form-group"><label class="lbl">Preheader</label><input class="inp"
+                                    value="Your personal cosmic journey starts now." /></div>
+                        </div>
+                        <div class="form-group full" style="margin-bottom:14px">
+                            <label class="lbl">Email Body (HTML)</label>
+                            <textarea class="inp" style="min-height:200px">&lt;h1&gt;Welcome, {{name}}!&lt;/h1&gt;
+&lt;p&gt;Your zodiac sign is &lt;strong&gt;{{zodiac}}&lt;/strong&gt;. Your personalized horoscope awaits you at FateSpy.&lt;/p&gt;
+&lt;p&gt;&lt;a href="{{horoscope_link}}"&gt;View My Horoscope&lt;/a&gt;&lt;/p&gt;
+&lt;p style="font-size:12px"&gt;&lt;a href="{{unsubscribe_link}}"&gt;Unsubscribe&lt;/a&gt;&lt;/p&gt;</textarea>
+                        </div>
+                        <div style="display:flex;gap:10px">
+                            <button class="btn btn-primary">&#128190; Save Template</button>
+                            <button class="btn btn-ghost">&#128065; Preview</button>
+                            <button class="btn btn-ghost">&#9993; Send Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ CONTENT ═══ -->
+            <div class="section" id="section-content">
+                <div class="panel">
+                    <div class="panel-title">&#9997; Horoscope Content Management</div>
+                    <div style="display:flex;gap:10px;margin-bottom:18px;align-items:center">
+                        <select class="inp" style="max-width:160px" id="content-sign">
+                            <option value="">All Signs</option>
+                            <option>Aries</option>
+                            <option>Taurus</option>
+                            <option>Gemini</option>
+                            <option>Cancer</option>
+                            <option>Leo</option>
+                            <option>Virgo</option>
+                            <option>Libra</option>
+                            <option>Scorpio</option>
+                            <option>Sagittarius</option>
+                            <option>Capricorn</option>
+                            <option>Aquarius</option>
+                            <option>Pisces</option>
+                        </select>
+                        <select class="inp" style="max-width:140px">
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
+                        <button class="btn btn-primary">&#9654; Regenerate with AI</button>
+                        <button class="btn btn-ghost">&#128190; Export JSON</button>
+                        <span style="font-size:.8rem;color:var(--txt2);margin-left:auto">Last generated: <strong>Today
+                                06:00</strong></span>
+                    </div>
+                    <div style="background:var(--bg3);border:var(--border);border-radius:8px;padding:18px">
+                        <div style="font-size:.85rem;color:var(--txt2);margin-bottom:12px">Select a sign above to edit
+                            its reading, or regenerate all 48 readings with AI.</div>
+                        <div class="form-group full" style="margin-bottom:12px"><label class="lbl">Love &amp;
+                                Relationships</label><textarea class="inp"></textarea></div>
+                        <div class="form-group full" style="margin-bottom:12px"><label class="lbl">Career &amp;
+                                Work</label><textarea class="inp"></textarea></div>
+                        <div class="form-group full" style="margin-bottom:12px"><label class="lbl">Money &amp;
+                                Finances</label><textarea class="inp"></textarea></div>
+                        <div class="form-group full" style="margin-bottom:12px"><label class="lbl">Health &amp;
+                                Energy</label><textarea class="inp"></textarea></div>
+                        <div class="form-group full" style="margin-bottom:12px"><label class="lbl">Family &amp;
+                                Home</label><textarea class="inp"></textarea></div>
+                        <button class="btn btn-primary">&#128190; Save Reading</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SUBSCRIPTIONS ═══ -->
+            <div class="section" id="section-subscriptions">
+                <div class="panel">
+                    <div class="panel-title">&#128179; Subscription &amp; Services Management</div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+                        <div style="background:var(--bg3);border:var(--border);border-radius:10px;padding:18px">
+                            <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:8px">
+                                Free Plan</div>
+                            <div style="font-size:1.4rem;font-weight:700;margin-bottom:4px">$0</div>
+                            <div style="font-size:.78rem;color:var(--txt2)">Active users: 1,101</div>
+                        </div>
+                        <div
+                            style="background:var(--bg3);border:1px solid rgba(139,92,246,.3);border-radius:10px;padding:18px">
+                            <div
+                                style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--purple-l);margin-bottom:8px">
+                                VIP Plan</div>
+                            <div style="font-size:1.4rem;font-weight:700;margin-bottom:4px">$9.99<span
+                                    style="font-size:.8rem;font-weight:400;color:var(--txt2)">/mo</span></div>
+                            <div style="font-size:.78rem;color:var(--txt2)">Active users: 183</div>
+                        </div>
+                        <div style="background:var(--bg3);border:var(--border);border-radius:10px;padding:18px">
+                            <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:8px">
+                                One-time Services</div>
+                            <div style="font-size:1.4rem;font-weight:700;margin-bottom:4px">$2–$29</div>
+                            <div style="font-size:.78rem;color:var(--txt2)">Sold this month: 47</div>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Price</th>
+                                <th>Sales</th>
+                                <th>Revenue</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Palm Reading (AI)</td>
+                                <td>$4.99</td>
+                                <td>21</td>
+                                <td>$104.79</td>
+                                <td><span class="badge-status ok">Active</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                            <tr>
+                                <td>Aura Scan (AI)</td>
+                                <td>$4.99</td>
+                                <td>14</td>
+                                <td>$69.86</td>
+                                <td><span class="badge-status ok">Active</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                            <tr>
+                                <td>Coffee Reading (AI)</td>
+                                <td>$2.99</td>
+                                <td>8</td>
+                                <td>$23.92</td>
+                                <td><span class="badge-status ok">Active</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                            <tr>
+                                <td>Personal Natal Chart</td>
+                                <td>$9.99</td>
+                                <td>4</td>
+                                <td>$39.96</td>
+                                <td><span class="badge-status ok">Active</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                            <tr>
+                                <td>VIP Year Ahead Report</td>
+                                <td>$29.99</td>
+                                <td>0</td>
+                                <td>$0</td>
+                                <td><span class="badge-status warn">Draft</span></td>
+                                <td><button class="btn btn-ghost btn-sm">Edit</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ═══ SETTINGS ═══ -->
+            <div class="section" id="section-settings">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                    <div class="panel">
+                        <div class="panel-title">&#9881; General Settings</div>
+                        <div style="display:flex;flex-direction:column;gap:14px">
+                            <div class="form-group"><label class="lbl">Site Name</label><input class="inp"
+                                    value="FateSpy.com" /></div>
+                            <div class="form-group"><label class="lbl">Default Language</label>
+                                <select class="inp">
+                                    <option>English</option>
+                                    <option>Romanian</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="lbl">Default AI Provider</label>
+                                <select class="inp">
+                                    <option>Groq (llama-3.3-70b)</option>
+                                    <option>OpenAI (gpt-4o)</option>
+                                    <option>Gemini (2.0 Flash)</option>
+                                </select>
+                            </div>
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:var(--border)">
+                                <div>
+                                    <div style="font-size:.85rem;font-weight:600">Maintenance Mode</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Shows a maintenance page to visitors
+                                    </div>
+                                </div>
+                                <label class="toggle"><input type="checkbox" />
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </label>
+                            </div>
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:var(--border)">
+                                <div>
+                                    <div style="font-size:.85rem;font-weight:600">GDPR Banner</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Show cookie consent banner</div>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked />
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </label>
+                            </div>
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:var(--border)">
+                                <div>
+                                    <div style="font-size:.85rem;font-weight:600">User Registration</div>
+                                    <div style="font-size:.75rem;color:var(--txt2)">Allow new signups</div>
+                                </div>
+                                <label class="toggle"><input type="checkbox" checked />
+                                    <div class="toggle-track"></div>
+                                    <div class="toggle-thumb"></div>
+                                </label>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top:4px">&#128190; Save Settings</button>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">&#128302; Horoscope Generation Schedule</div>
+                        <div style="display:flex;flex-direction:column;gap:12px">
+                            <div class="form-group"><label class="lbl">Generation Time (daily)</label><input class="inp"
+                                    value="06:00" /></div>
+                            <div class="form-group"><label class="lbl">AI Model for Generation</label>
+                                <select class="inp">
+                                    <option>Groq — llama-3.3-70b-versatile</option>
+                                    <option>OpenAI — gpt-4o-mini</option>
+                                    <option>Gemini — 2.0-flash</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="lbl">Temperature</label><input class="inp"
+                                    type="number" value="0.85" min="0" max="1" step="0.05" /></div>
+                            <div class="form-group"><label class="lbl">Max Tokens per Reading</label><input class="inp"
+                                    type="number" value="800" /></div>
+                            <div style="display:flex;gap:10px;margin-top:6px">
+                                <button class="btn btn-primary">&#128190; Save Schedule</button>
+                                <button class="btn btn-ghost">&#9654; Run Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </div><!-- /main -->
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                item.classList.add('active');
+                const sec = item.dataset.section;
+                document.getElementById('section-' + sec).classList.add('active');
+                document.getElementById('page-title').textContent = item.textContent.trim();
+            });
+        });
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        // API Key providers
+        const providers = [
+            { name: 'OpenAI', subname: 'GPT-4o / GPT-4o-mini', icon: '&#129302;', color: '#10a37f', id: 'openai' },
+            { name: 'Groq', subname: 'Llama 3.3 70B (current)', icon: '&#9889;', color: '#f55036', id: 'groq' },
+            { name: 'Google Gemini', subname: 'Gemini 2.0 Flash', icon: '&#9671;', color: '#4285f4', id: 'gemini' },
+            { name: 'xAI Grok', subname: 'Grok-2 / Grok-3', icon: '&#10006;', color: '#fff', id: 'grok' },
+            { name: 'Anthropic Claude', subname: 'Claude 3.5 Sonnet', icon: '&#9643;', color: '#d4a574', id: 'claude' },
+            { name: 'Mistral AI', subname: 'Mistral Large', icon: '&#127754;', color: '#ff7000', id: 'mistral' },
+            { name: 'MiniMax', subname: 'MiniMax-01', icon: '&#127775;', color: '#6366f1', id: 'minimax' },
+            { name: 'Kimi (Moonshot)', subname: 'Moonshot-v1-128k', icon: '&#127769;', color: '#7c5cbf', id: 'kimi' },
+            { name: 'Cohere', subname: 'Command R+', icon: '&#127916;', color: '#39d3c3', id: 'cohere' },
+            { name: 'Together AI', subname: 'Multi-model routing', icon: '&#128101;', color: '#ff6b35', id: 'together' }
+        ];
+
+        const grid = document.getElementById('api-keys-grid');
+        providers.forEach(p => {
+            const saved = localStorage.getItem('adm_key_' + p.id) || '';
+            const masked = saved ? ('****' + saved.slice(-4)) : '';
+            grid.innerHTML += `
+  <div class="api-card">
+    <div class="api-card-head">
+      <div class="api-provider-logo" style="background:${p.color}22;color:${p.color}">${p.icon}</div>
+      <div><div class="api-provider-name">${p.name}</div><div class="api-provider-model">${p.subname}</div></div>
+    </div>
+    <div class="api-key-row">
+      <input class="inp" id="key-${p.id}" type="password" placeholder="Enter API key..." value="${saved}" style="font-family:monospace;font-size:.82rem"/>
+      <button class="toggle-btn" onclick="toggleKey('${p.id}')">Show</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="testKey('${p.id}','${p.name}')">&#9654; Test</button>
+      <span id="status-${p.id}" style="font-size:.75rem;color:var(--txt2);align-self:center"></span>
+    </div>
+  </div>`;
+        });
+
+        function toggleKey(id) {
+            const inp = document.getElementById('key-' + id);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+        }
+        function testKey(id, name) {
+            const el = document.getElementById('status-' + id);
+            el.textContent = 'Testing...'; el.style.color = 'var(--txt2)';
+            setTimeout(() => { el.textContent = '&#10003; Connected'; el.style.color = 'var(--green)'; }, 1200);
+        }
+        function saveAllKeys() {
+            providers.forEach(p => {
+                const val = document.getElementById('key-' + p.id)?.value;
+                if (val) localStorage.setItem('adm_key_' + p.id, val);
+            });
+            alert('All keys saved locally.');
+        }
+        function testAllKeys() { providers.forEach(p => testKey(p.id, p.name)); }
+
+        // Template selector
+        function selectTemplate(el, name) {
+            document.querySelectorAll('.template-item').forEach(t => t.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('tpl-name').textContent = el.querySelector('.font-weight-600, div').textContent;
+        }
+
+        // ── AUTH GUARD ────────────────────────────────────────
+        (function checkAdminAuth() {
+            const token = localStorage.getItem('fs_token');
+            const user = JSON.parse(localStorage.getItem('fs_user') || 'null');
+            if (!token || !user) { window.location.href = '/login.html?redirect=/admin.html'; return; }
+            if (user.role !== 'admin') { window.location.href = '/user-dashboard.html'; return; }
+            const initials = (user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            const nameEl = document.querySelector('.sidebar-footer strong');
+            const avatarEl = document.querySelector('.avatar');
+            if (nameEl) nameEl.textContent = user.name || user.email;
+            if (avatarEl) avatarEl.textContent = initials;
+        })();
+
+        // ── LOGOUT ────────────────────────────────────────────
+        async function adminLogout() {
+            const token = localStorage.getItem('fs_token');
+            if (token) {
+                try { await fetch('/api/auth/logout.php', { method: 'POST', headers: { Authorization: 'Bearer ' + token } }); } catch { }
+            }
+            localStorage.removeItem('fs_token');
+            localStorage.removeItem('fs_user');
+            window.location.href = '/login.html';
+        }
+        document.querySelector('.avatar')?.addEventListener('click', () => {
+            if (confirm('Log out of admin panel?')) adminLogout();
+        });
+    </script>
+</body>
+
+</html>
