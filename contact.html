@@ -66,17 +66,25 @@
 </head>
 
 <body>
-    <!-- Header Minimal -->
-    <header class="site-header" id="site-header" style="background: rgba(12, 14, 36, 0.9);">
-        <div class="container header-inner">
-            <a href="/" class="logo">
-                <img src="/assets/images/logo.webp" alt="FateSpy Logo" width="32" height="32"
-                    style="margin-right:10px;">
-                FATE<span style="color:var(--accent-gold)">SPY</span>.COM
+    <!-- ═══════════════════ HEADER ═══════════════════ -->
+    <header class="site-header scrolled" id="site-header">
+        <div class="header-inner">
+            <a href="/" class="logo" id="logo">
+                <img src="/assets/images/logo.webp" alt="FateSpy" class="logo-img" />
+                <span class="logo-text">FateSpy<span class="logo-dot">.com</span></span>
             </a>
-            <nav class="main-nav">
-                <a href="/" class="nav-link">← Back to Home</a>
+            <nav class="main-nav" id="main-nav">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#astrology" class="nav-link">Astrology</a>
+                <a href="/#divination" class="nav-link">Divination &amp; Oracle</a>
+                <a href="/#daily-horoscope" class="nav-link">FateSpy AI</a>
             </nav>
+            <div class="header-actions">
+                <a href="/login.html" class="btn btn-outline btn-sm" id="auth-btn">Login</a>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
 
@@ -112,12 +120,44 @@
         </div>
     </section>
 
-    <!-- Footer Minimal -->
-    <footer class="site-footer" style="padding: 40px 0; border-top: var(--border-glass); text-align: center;">
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer class="site-footer" id="site-footer">
         <div class="container">
-            <p class="copyright">&copy; 2026 FateSpy.com — All rights reserved.</p>
+            <div class="footer-top">
+                <div class="footer-links">
+                    <a href="/privacy.html">Privacy Policy</a>
+                    <a href="/terms.html">Terms &amp; Conditions</a>
+                    <a href="/cookies.html">Cookie Policy</a>
+                    <a href="/contact.html">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="disclaimer">FateSpy.com is a platform for entertainment and self-discovery. The information presented does not replace professional medical or psychological advice.</p>
+                <p class="copyright">&copy; 2026 FateSpy.com — All rights reserved.</p>
+            </div>
         </div>
     </footer>
+
+    <script>
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const mainNav = document.getElementById('main-nav');
+        if (hamburger && mainNav) {
+            hamburger.addEventListener('click', () => {
+                mainNav.classList.toggle('open');
+                hamburger.classList.toggle('active');
+            });
+        }
+        // Auth button - check if logged in
+        (function () {
+            const token = localStorage.getItem('fatespy_token');
+            const authBtn = document.getElementById('auth-btn');
+            if (token && authBtn) {
+                authBtn.textContent = 'Dashboard';
+                authBtn.href = '/user-dashboard.html';
+            }
+        })();
+    </script>
 </body>
 
 </html>

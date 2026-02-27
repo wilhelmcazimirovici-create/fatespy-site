@@ -51,7 +51,7 @@
 
         .hero-banner {
             position: relative;
-            padding: 120px 24px 38px;
+            padding: 55px 24px 38px;
             text-align: center;
             background: linear-gradient(135deg, #0c0e24 0%, #1a0c3e 45%, #0a1628 100%);
             overflow: hidden;
@@ -366,6 +366,18 @@
             box-shadow: 0 8px 28px rgba(139, 92, 246, 0.5);
         }
 
+        .hero-banner {
+            padding-top: 120px;
+        }
+
+        .page-footer-old {
+            text-align: center;
+            padding: 28px;
+            border-top: var(--border-glass);
+            color: var(--text-secondary);
+            font-size: 0.83rem;
+        }
+
         /* TIMEFRAME TABS */
         .timeframe-tabs {
             display: flex;
@@ -545,8 +557,8 @@
 
     <div class="hero-banner">
         <div class="hero-stars"></div>
-        <h1>Your Personal Horoscope</h1>
-        <p class="subtitle">AI-generated reading based on your exact birth data</p>
+        <h1>Your Natal Birth Chart</h1>
+        <p class="subtitle">Mathematically precise planetary positions at your exact time of birth</p>
         <div class="birth-info-pill" id="birth-info-pill">&#8230;</div>
     </div>
 
@@ -574,163 +586,20 @@
                 </div>
             </div>
 
-            <div class="timeframe-tabs">
-                <button class="time-tab active" id="tab-natal" data-timeframe="natal">General Profile</button>
-                <button class="time-tab" data-timeframe="daily">Today</button>
-                <button class="time-tab" data-timeframe="weekly">This Week</button>
-                <button class="time-tab" data-timeframe="monthly">This Month</button>
-                <button class="time-tab" data-timeframe="yearly">This Year</button>
+            <!-- BIRTH CHART CONTENT -->
+            <div id="ephemeris-table-container"
+                style="background: rgba(0,0,0,0.4); border: 1px solid rgba(212,168,83,0.3); border-radius: 12px; padding: 20px; overflow-x: auto; margin-bottom: 30px;">
+                <!-- Table injected dynamically -->
             </div>
 
-            <div class="categories-grid">
-                <div class="category-card card-love">
-                    <div class="category-header">
-                        <div class="category-icon">&#128150;</div>
-                        <div class="category-title">Love &amp; Relationships</div>
-                    </div>
-                    <p class="category-text" id="res-love"></p>
+            <div class="category-card" style="margin-bottom: 30px;">
+                <div class="category-header">
+                    <div class="category-icon">&#10024;</div>
+                    <div class="category-title" style="color:var(--accent-gold);">Astrological Interpretation</div>
                 </div>
-                <div class="category-card card-career">
-                    <div class="category-header">
-                        <div class="category-icon">&#128188;</div>
-                        <div class="category-title">Career &amp; Work</div>
-                    </div>
-                    <p class="category-text" id="res-career"></p>
-                </div>
-                <div class="category-card card-money">
-                    <div class="category-header">
-                        <div class="category-icon">&#128176;</div>
-                        <div class="category-title">Money &amp; Finances</div>
-                    </div>
-                    <p class="category-text" id="res-money"></p>
-                </div>
-                <div class="category-card card-health">
-                    <div class="category-header">
-                        <div class="category-icon">&#127807;</div>
-                        <div class="category-title">Health &amp; Energy</div>
-                    </div>
-                    <p class="category-text" id="res-health"></p>
-                </div>
-                <div class="category-card card-home">
-                    <div class="category-header">
-                        <div class="category-icon">&#127968;</div>
-                        <div class="category-title">Family &amp; Home</div>
-                    </div>
-                    <p class="category-text" id="res-home"></p>
-                </div>
+                <p class="category-text" id="res-interpretation"></p>
             </div>
 
-            <!-- COMPATIBILITY TEST -->
-            <div class="compatibility-cta" id="compatibility-section"
-                style="background: linear-gradient(135deg, rgba(212, 168, 83, 0.08), rgba(16, 18, 50, 0.5)); border: 1px solid rgba(212, 168, 83, 0.2); border-radius: var(--radius-lg); padding: 30px; margin-top: 36px; text-align: center;">
-                <h3 style="font-family:'Cinzel',serif;font-size:1.25rem;color:var(--accent-gold);margin-bottom:8px">
-                    &#128158; Test Love Compatibility</h3>
-                <p style="color:var(--text-secondary);font-size:0.95rem;margin-bottom:20px">Curious about your
-                    connection? Enter your partner's details to see how your stars align.</p>
-
-                <form id="compatibility-form"
-                    style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-width: 600px; margin: 0 auto;">
-                    <div style="display:flex; gap:10px; width:100%;">
-                        <select id="partner-day" required
-                            style="flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);padding:10px 14px;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:0.9rem;">
-                            <option value="" disabled selected>Day</option>
-                        </select>
-                        <select id="partner-month" required
-                            style="flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);padding:10px 14px;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:0.9rem;">
-                            <option value="" disabled selected>Month</option>
-                            <option value="1">Jan</option>
-                            <option value="2">Feb</option>
-                            <option value="3">Mar</option>
-                            <option value="4">Apr</option>
-                            <option value="5">May</option>
-                            <option value="6">Jun</option>
-                            <option value="7">Jul</option>
-                            <option value="8">Aug</option>
-                            <option value="9">Sep</option>
-                            <option value="10">Oct</option>
-                            <option value="11">Nov</option>
-                            <option value="12">Dec</option>
-                        </select>
-                        <select id="partner-year" required
-                            style="flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);padding:10px 14px;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:0.9rem;">
-                            <option value="" disabled selected>Year</option>
-                        </select>
-                    </div>
-                    <div style="display:flex; gap:10px; width:100%;">
-                        <select id="partner-place" required
-                            style="flex:2;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);padding:10px 14px;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:0.9rem;">
-                            <option value="" disabled selected>Birth Region</option>
-                            <option value="Europe">Europe</option>
-                            <option value="North America">North America</option>
-                            <option value="South America">South America</option>
-                            <option value="Asia">Asia</option>
-                            <option value="Africa">Africa</option>
-                            <option value="Oceania">Oceania</option>
-                        </select>
-                        <select id="partner-gender" required
-                            style="flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);padding:10px 14px;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:0.9rem;">
-                            <option value="" disabled selected>Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-subscribe" id="btn-compare"
-                        style="width:100%;background:linear-gradient(135deg, var(--accent-gold), #b8860b);color:#101232;padding:10px 24px;">Check
-                        Compatibility</button>
-                </form>
-
-                <div id="compatibility-result"
-                    style="display:none; margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.05);">
-                    <div style="text-align:center; font-family:'Cinzel',serif; font-size:1.1rem; margin-bottom: 12px; color: var(--accent-gold);"
-                        id="compat-title"></div>
-                    <p id="compat-text"
-                        style="color:var(--text-secondary); line-height:1.6; font-size: 0.95rem; margin:0;"></p>
-                </div>
-            </div>
-
-            <div class="email-cta">
-                <h3>&#128336; Get Your Personalized Horoscope Delivered Free</h3>
-                <p>Subscribe to receive your deeply personal daily reading directly in your inbox every morning. No
-                    spam, ever.</p>
-                <form class="email-form" id="subscribe-form">
-                    <input type="email" id="subscribe-email" class="email-input"
-                        placeholder="Your best email address..." required />
-                    <button type="submit" class="btn-subscribe">Subscribe Free</button>
-                </form>
-                <div id="subscribe-msg" style="margin-top:10px;font-size:0.85rem;display:none;"></div>
-            </div>
-
-            <!-- REGISTER CTA -->
-            <div class="register-cta" id="register-container" style="display:none;">
-                <h3 style="font-family:'Cinzel',serif;font-size:1.25rem;color:var(--text-primary);margin-bottom:8px">
-                    &#10024; Save Your Reading forever</h3>
-                <p style="color:var(--text-secondary);font-size:0.95rem;margin-bottom:20px">Create a free account to
-                    securely save your birth details and see your history. You won't have to enter them again next time!
-                </p>
-
-                <form id="signup-form">
-                    <div class="form-group">
-                        <label>Your Name</label>
-                        <input type="text" id="reg-name" placeholder="John Doe" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="reg-email" placeholder="you@example.com" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="reg-password" placeholder="Min 8 chars, uppercase & number"
-                            required />
-                        <input type="text" name="website" class="hp" style="display:none;" tabindex="-1"
-                            autocomplete="off" />
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="margin-top:10px;width:100%;max-width:480px"
-                        id="btn-reg">Create My Free Account</button>
-                </form>
-                <div id="reg-msg"
-                    style="margin-top:12px;font-size:0.85rem;display:none;padding:10px;border-radius:8px;max-width:480px;margin-left:auto;margin-right:auto">
-                </div>
-            </div>
 
         </div>
     </div>
@@ -815,90 +684,66 @@
                 el('error-msg').textContent = msg || 'Something went wrong. Please try again.';
             }
 
-            function showResults(data, sign) {
+            function showResults(data, sign, ephemerisData) {
                 el('loading-state').style.display = 'none';
                 var zd = ZODIAC[sign] || ZODIAC.aries;
                 el('res-zodiac-icon').textContent = zd.icon;
                 el('res-zodiac-name').textContent = zd.name;
                 el('res-zodiac-dates').textContent = zd.dates;
-                var fallback = 'The stars are still aligning for this aspect of your life. Check back soon.';
-                el('res-love').textContent = data.love || fallback;
-                el('res-career').textContent = data.career || fallback;
-                el('res-money').textContent = data.money || fallback;
-                el('res-health').textContent = data.health || fallback;
-                el('res-home').textContent = data.home || fallback;
+
+                // Build Ephemeris Table visually
+                if (ephemerisData && ephemerisData.length > 0) {
+                    var tableHTML = '<table style="width: 100%; border-collapse: collapse; text-align: left; color: #fff;">';
+                    tableHTML += '<tr style="border-bottom: 2px solid var(--accent-gold);"><th style="padding: 12px;">Planet/Body</th><th style="padding: 12px;">Sign</th><th style="padding: 12px;">Degree</th></tr>';
+
+                    ephemerisData.forEach(p => {
+                        tableHTML += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <td style="padding: 12px; font-weight: bold; color: var(--accent-gold);">${p.planet}</td>
+                            <td style="padding: 12px;">${p.sign}</td>
+                            <td style="padding: 12px; color: var(--text-secondary);">${p.degree}°</td>
+                        </tr>`;
+                    });
+                    tableHTML += '</table>';
+                    el('ephemeris-table-container').innerHTML = tableHTML;
+                }
+
+                el('res-interpretation').innerHTML = data.interpretation || "The stars have aligned perfectly.";
                 el('results-state').style.display = 'block';
             }
 
             function pad(n) { return String(n).padStart(2, '0'); }
 
             var currentParams = null;
-            var currentTimeframe = 'natal';
 
-            async function run(p, timeframe) {
-                timeframe = timeframe || 'natal';
+            async function run(p) {
                 currentParams = p;
-                currentTimeframe = timeframe;
-
                 var sign = getSign(p.month, p.day);
                 var zd = ZODIAC[sign] || ZODIAC.aries;
                 var mName = MONTHS[parseInt(p.month) - 1] || p.month;
-
-                el('tab-natal').textContent = 'Your ' + zd.name;
 
                 // Show birth pill
                 el('birth-info-pill').innerHTML =
                     zd.icon + ' <strong>' + zd.name + '</strong>' +
                     ' <span class="sep">|</span> ' + p.day + ' ' + mName + ' ' + p.year +
-                    ' <span class="sep">|</span> ' + p.hour + ':' + pad(p.minute) +
-                    (p.place ? ' <span class="sep">|</span> ' + p.place : '') +
-                    ' <span class="sep">|</span> ' + p.gender;
+                    ' <span class="sep">|</span> ' + p.hour + ':' + pad(p.minute);
 
                 // Set loading
                 el('loading-state').style.display = 'flex';
                 el('results-state').style.display = 'none';
                 el('error-state').style.display = 'none';
 
-                // Cache check
-                var cacheKey = 'fs_ph_' + timeframe + '_' + [p.day, p.month, p.year, p.hour, p.minute, p.place, p.gender].join('_');
-                try {
-                    var cached = localStorage.getItem(cacheKey);
-                    if (cached) {
-                        var cd = JSON.parse(cached);
-                        var maxAgeHours = timeframe === 'daily' ? 24 : (timeframe === 'natal' ? 24 * 365 : 12); // Natal cached basically forever (1 year locally)
-                        if (Date.now() - cd.ts < maxAgeHours * 3600 * 1000) { showResults(cd.r, sign); return; }
-                    }
-                } catch (e) { }
-
-                var timeRef = '';
-                var now = new Date();
-                var currentEphemerisStr = "";
-
-                if (typeof window.getEphemerisData === 'function') {
-                    currentEphemerisStr = "Current Transiting Ephemeris (Today's Skies):\n" + window.formatEphemerisForPrompt(window.getEphemerisData(now));
-                }
-
-                if (timeframe === 'natal') timeRef = 'Analyze their lifelong general natal birth chart potential and recurring lifetime themes. Do not focus on current dates. This reading should feel like a timeless permanent profile.';
-                else if (timeframe === 'daily') timeRef = 'Today is ' + now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + '. Generate a deeply personal daily reading for today, referencing current transits over their natal chart.';
-                else if (timeframe === 'weekly') timeRef = 'Generate a deeply personal weekly forecast for the next 7 days, referencing current transits over their natal chart.';
-                else if (timeframe === 'monthly') timeRef = 'Generate a deeply personal monthly forecast for the current month, referencing current transits over their natal chart.';
-                else if (timeframe === 'yearly') timeRef = 'Generate a deeply personal yearly forecast covering major transits for the upcoming year over their natal chart.';
-
                 var myBirthDate = new Date(p.year, parseInt(p.month) - 1, p.day, p.hour || 12, p.minute || 0);
-                var natalEphemerisStr = "";
-                if (typeof window.getEphemerisData === 'function') {
-                    natalEphemerisStr = "User's Exact Natal Ephemeris:\n" + window.formatEphemerisForPrompt(window.getEphemerisData(myBirthDate));
-                }
+                var ephemerisData = typeof window.getEphemerisData === 'function' ? window.getEphemerisData(myBirthDate) : null;
+                var natalEphemerisStr = typeof window.formatEphemerisForPrompt === 'function' ? window.formatEphemerisForPrompt(ephemerisData) : "";
 
-                var prompt = timeRef + ' The person is a ' + p.gender +
-                    ' born on ' + p.day + ' ' + mName + ' ' + p.year + ' at ' + p.hour + ':' + pad(p.minute) +
-                    ' in ' + (p.place || 'an unknown location') + '. Sun sign: ' + zd.name + '.\n\n' +
+                var prompt = 'Analyze their lifelong general natal birth chart potential and recurring lifetime themes.\n' +
+                    ' The person was born on ' + p.day + ' ' + mName + ' ' + p.year + ' at ' + p.hour + ':' + pad(p.minute) +
+                    '. Sun sign: ' + zd.name + '.\n\n' +
                     "Mathematical Astronomical Facts to Strongly Base On:\n" +
-                    natalEphemerisStr + "\n" +
-                    currentEphemerisStr + "\n\n" +
-                    'Write 3-4 rich, personal, mystical sentences per category based on comparing their natal planetary placements with the current skies.\n\n' +
-                    'YOU MUST return ALL 5 keys. Respond ONLY with this exact JSON (fill all values, NO MARKDOWN):\n' +
-                    '{"love":"...","career":"...","money":"...","health":"...","home":"..."}';
+                    natalEphemerisStr + "\n\n" +
+                    'Write a 4-6 sentence profound mystical summary of their innate strengths, weaknesses, and life path based solely on the exact mathematical placement of their planets at birth.\n\n' +
+                    'YOU MUST return ONLY this exact JSON (fill all values, NO MARKDOWN):\n' +
+                    '{"interpretation":"..."}';
 
                 try {
                     var resp = await fetch(API_URL, {
@@ -921,28 +766,14 @@
                     var text = json && json.choices && json.choices[0] && json.choices[0].message && json.choices[0].message.content;
                     if (!text) throw new Error('Empty response');
                     var reading = JSON.parse(text);
-                    if (!reading.love) throw new Error('Bad format');
 
-                    try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), r: reading })); } catch (e) { }
-                    showResults(reading, sign);
+                    showResults(reading, sign, ephemerisData);
 
                 } catch (err) {
                     console.error('Horoscope error:', err);
                     showError('The stars are temporarily unavailable. Please try again in a moment.');
                 }
             }
-
-            // Timeframe switching
-            document.querySelectorAll('.time-tab').forEach(function (tab) {
-                tab.addEventListener('click', function () {
-                    if (this.classList.contains('active')) return;
-                    document.querySelectorAll('.time-tab').forEach(function (t) { t.classList.remove('active'); });
-                    this.classList.add('active');
-                    if (currentParams) {
-                        run(currentParams, this.getAttribute('data-timeframe'));
-                    }
-                });
-            });
 
             // Email subscription
             el('subscribe-form').addEventListener('submit', async function (e) {

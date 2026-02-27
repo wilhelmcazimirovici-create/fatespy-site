@@ -71,6 +71,7 @@ $tables[] = "CREATE TABLE IF NOT EXISTS `horoscopes` (
   `content`      JSON         NOT NULL,
   `generated_at` DATE         NOT NULL,
   `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uq_zodiac_period_date` (`zodiac`, `period`, `generated_at`),
   INDEX `idx_zodiac_period_date` (`zodiac`, `period`, `generated_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 

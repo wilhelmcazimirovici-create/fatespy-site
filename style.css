@@ -241,6 +241,7 @@ select.input-field option {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: nowrap;
 }
 
 .logo {
@@ -253,6 +254,7 @@ select.input-field option {
   color: var(--text-primary);
   text-decoration: none;
   letter-spacing: 1px;
+  flex-shrink: 0;
 }
 
 .logo-img {

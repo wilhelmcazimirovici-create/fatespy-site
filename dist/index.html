@@ -134,8 +134,8 @@
     ]
   }
   </script>
-  <script type="module" crossorigin src="/assets/index-U0kCPm7u.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-DsCJNq19.css">
+  <script type="module" crossorigin src="/assets/index-CsFrEzU6.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CztftdYi.css">
 </head>
 
 <body>
@@ -151,9 +151,9 @@
       <nav class="main-nav" id="main-nav">
         <a href="#astrology" class="nav-link" data-i18n="nav_astrology">Astrology</a>
         <a href="#divination" class="nav-link" data-i18n="nav_divination">Divination &amp; Oracle</a>
-        <a href="#destiny-code" class="nav-link" data-i18n="nav_destiny">Destiny Code</a>
-        <a href="#fatespy-ai" class="nav-link" data-i18n="nav_fatespy_ai">FateSpy AI</a>
-        <a href="#energy-zen" class="nav-link" data-i18n="nav_energy">Energy &amp; Zen</a>
+        <a href="#personalized-horoscope" class="nav-link" data-i18n="nav_destiny">Destiny Code</a>
+        <a href="#daily-horoscope" class="nav-link" data-i18n="nav_fatespy_ai">FateSpy AI</a>
+        <a href="#spiritual" class="nav-link" data-i18n="nav_energy">Energy &amp; Zen</a>
       </nav>
 
       <div class="header-actions">
@@ -172,7 +172,7 @@
             <button data-lang="ru">Русский</button>
           </div>
         </div>
-        <a href="#login" class="btn btn-outline btn-sm" id="auth-btn" data-i18n="btn_login">Login</a>
+        <a href="/login.html" class="btn btn-outline btn-sm" id="auth-btn" data-i18n="btn_login">Login</a>
       </div>
 
       <button class="hamburger" id="hamburger" aria-label="Open menu">
@@ -188,7 +188,6 @@
       <div class="dashboard-header"
         style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 30px;">
         <h2 style="font-family: 'Cinzel', serif; font-size: 2rem; color: var(--accent-gold);">Welcome back, Seeker.</h2>
-        <button class="btn btn-outline btn-sm" id="logout-btn">Logout</button>
       </div>
 
       <p style="color: var(--text-secondary); margin-bottom: 20px;">Your Daily Omni-Synergy Data. Upload your daily
@@ -255,6 +254,14 @@
   <!-- ═══════════════════ DAILY HOROSCOPE ═══════════════════ -->
   <section class="daily-horoscope" id="daily-horoscope" style="padding: 60px 0;">
     <div class="container hero-horoscope-container" style="position: relative; z-index: 2; width: 100%;">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <span
+          style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-purple-l); display: block; margin-bottom: 10px;">☽
+          Daily · Weekly · Monthly · Yearly</span>
+        <h2
+          style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--text-primary); margin: 0;">
+          General Horoscope</h2>
+      </div>
       <div class="widgets-row" style="grid-template-columns: 1fr;">
         <!-- 1. SINGLE UNIFIED HOROSCOPE & PREDICTIONS CARD -->
         <div class="widget-card" id="widget-horoscope-unified"
@@ -475,6 +482,95 @@
       </div>
     </div>
   </section>
+
+  <!-- ═══════════════════ PERSONALIZED AI HOROSCOPE ═══════════════════ -->
+  <section class="personalized-horoscope" id="personalized-horoscope"
+    style="padding: 80px 0; background: linear-gradient(135deg, #0c0e24 0%, #1a0c3e 30%, #0c0e24 60%, #0a1628 100%); position: relative; overflow: hidden;">
+    <div
+      style="position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 30%, rgba(212, 168, 83, 0.06) 0%, transparent 50%); pointer-events: none;">
+    </div>
+    <div class="container" style="position: relative; z-index: 1;">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <span
+          style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-purple-l); display: block; margin-bottom: 10px;">✨
+          AI-Powered · Based on Your Exact Birth Data</span>
+        <h2
+          style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 3vw, 2rem); background: linear-gradient(135deg, #d4a853, #f0d78c, #d4a853); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px;">
+          Personalized Horoscope</h2>
+        <p style="font-size: 1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Unlock a deeply
+          personalized reading based on your exact birth data. Our AI analyzes planetary positions at the moment of your
+          birth.</p>
+      </div>
+
+      <div id="personal-horo-form"
+        style="max-width: 700px; margin: 0 auto; background: rgba(16, 18, 50, 0.7); border: 1px solid rgba(212, 168, 83, 0.2); border-radius: 20px; padding: 35px 30px; backdrop-filter: blur(10px); box-shadow: 0 0 40px rgba(139, 92, 246, 0.1), 0 0 80px rgba(212, 168, 83, 0.05);">
+
+        <!-- Row 1: Date -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px;">
+          <div>
+            <label
+              style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); display: block; margin-bottom: 6px;">Day</label>
+            <select id="ph-day" class="input-field" style="width: 100%;"></select>
+          </div>
+          <div>
+            <label
+              style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); display: block; margin-bottom: 6px;">Month</label>
+            <select id="ph-month" class="input-field" style="width: 100%;">
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+          <div>
+            <label
+              style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); display: block; margin-bottom: 6px;">Year</label>
+            <select id="ph-year" class="input-field" style="width: 100%;"></select>
+          </div>
+        </div>
+
+        <!-- Row 2: Time & Place & Gender -->
+        <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 14px; margin-bottom: 24px;">
+          <div>
+            <label
+              style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); display: block; margin-bottom: 6px;">Birth
+              Time</label>
+            <select id="ph-time" class="input-field" style="width: 100%;"></select>
+          </div>
+          <div>
+            <label
+              style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); display: block; margin-bottom: 6px;">Birth
+              Place</label>
+            <input type="text" id="ph-place" class="input-field" placeholder="e.g. Bucharest, Romania"
+              style="width: 100%;" />
+          </div>
+          <div>
+            <label
+              style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold); display: block; margin-bottom: 6px;">Sex</label>
+            <select id="ph-gender" class="input-field" style="width: 100%;">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- CTA Button -->
+        <button id="btn-personal-horoscope" class="btn btn-primary"
+          style="width: 100%; padding: 16px; font-size: 1.1rem; font-family: 'Cinzel', serif; letter-spacing: 2px; border-radius: 12px; background: linear-gradient(135deg, #d4a853 0%, #8b5cf6 100%); box-shadow: 0 4px 25px rgba(212, 168, 83, 0.3); transition: all 0.4s; text-transform: uppercase;">
+          &#128302; Generate My Personal Horoscope
+        </button>
+      </div>
+    </div>
+  </section>
+
 
   <!-- ═══════════════════ DIVINATION & TAROT (MOST POPULAR) ═══════════════════ -->
   <section class="services" id="divination" style="padding: 60px 0;">
@@ -814,7 +910,8 @@
       <button class="btn btn-primary btn-sm" id="gdpr-accept" data-i18n="gdpr_accept">Accept All</button>
     </div>
   </div>
-
+
+  <script src="/astrology-engine.js"></script>
 </body>
 
 </html>

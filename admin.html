@@ -967,41 +967,14 @@
                     <div class="panel" style="height:fit-content">
                         <div class="panel-title">&#128196; Templates</div>
                         <div class="template-list">
-                            <div class="template-item selected" onclick="selectTemplate(this,'welcome')">
-                                <div>
-                                    <div style="font-weight:600;font-size:.88rem">Welcome Email</div>
-                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: on register</div>
-                                </div>
-                            </div>
-                            <div class="template-item" onclick="selectTemplate(this,'weekly')">
-                                <div>
-                                    <div style="font-weight:600;font-size:.88rem">Weekly Horoscope</div>
-                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: every Monday</div>
-                                </div>
-                            </div>
-                            <div class="template-item" onclick="selectTemplate(this,'promo')">
-                                <div>
-                                    <div style="font-weight:600;font-size:.88rem">Promo — Special Reading</div>
-                                    <div style="font-size:.75rem;color:var(--txt2)">Manual campaign</div>
-                                </div>
-                            </div>
-                            <div class="template-item" onclick="selectTemplate(this,'verify')">
-                                <div>
-                                    <div style="font-weight:600;font-size:.88rem">Email Verification</div>
-                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: on register</div>
-                                </div>
-                            </div>
-                            <div class="template-item" onclick="selectTemplate(this,'reset')">
-                                <div>
-                                    <div style="font-weight:600;font-size:.88rem">Password Reset</div>
-                                    <div style="font-size:.75rem;color:var(--txt2)">Triggered: user request</div>
-                                </div>
-                            </div>
+                            <!-- populated by js -->
                         </div>
-                        <button class="btn btn-ghost" style="width:100%">&#43; New Template</button>
+                        <button class="btn btn-ghost" style="width:100%" onclick="newTemplate()">&#43; New
+                            Template</button>
                     </div>
                     <div class="panel">
-                        <div class="panel-title">&#9997; Edit Template: <span id="tpl-name">Welcome Email</span></div>
+                        <div class="panel-title">&#9997; Edit Template: <span id="tpl-name">Select a template</span>
+                        </div>
                         <div
                             style="background:rgba(212,168,83,.06);border:1px solid rgba(212,168,83,.15);border-radius:8px;padding:12px;margin-bottom:16px;font-size:.82rem;color:var(--txt2)">
                             <strong style="color:var(--gold)">Available variables:</strong>
@@ -1012,19 +985,16 @@
                         </div>
                         <div class="form-grid" style="margin-bottom:14px">
                             <div class="form-group"><label class="lbl">Subject</label><input class="inp"
-                                    value="Welcome to FateSpy, {{name}}! Your destiny awaits &#128302;" /></div>
+                                    id="tpl-subject" value="" /></div>
                             <div class="form-group"><label class="lbl">Preheader</label><input class="inp"
-                                    value="Your personal cosmic journey starts now." /></div>
+                                    id="tpl-preheader" value="" /></div>
                         </div>
                         <div class="form-group full" style="margin-bottom:14px">
                             <label class="lbl">Email Body (HTML)</label>
-                            <textarea class="inp" style="min-height:200px">&lt;h1&gt;Welcome, {{name}}!&lt;/h1&gt;
-&lt;p&gt;Your zodiac sign is &lt;strong&gt;{{zodiac}}&lt;/strong&gt;. Your personalized horoscope awaits you at FateSpy.&lt;/p&gt;
-&lt;p&gt;&lt;a href="{{horoscope_link}}"&gt;View My Horoscope&lt;/a&gt;&lt;/p&gt;
-&lt;p style="font-size:12px"&gt;&lt;a href="{{unsubscribe_link}}"&gt;Unsubscribe&lt;/a&gt;&lt;/p&gt;</textarea>
+                            <textarea class="inp" id="tpl-body" style="min-height:200px"></textarea>
                         </div>
                         <div style="display:flex;gap:10px">
-                            <button class="btn btn-primary">&#128190; Save Template</button>
+                            <button class="btn btn-primary" onclick="saveTemplate()">&#128190; Save Template</button>
                             <button class="btn btn-ghost">&#128065; Preview</button>
                             <button class="btn btn-ghost">&#9993; Send Test</button>
                         </div>
@@ -1172,18 +1142,18 @@
                         <div class="panel-title">&#9881; General Settings</div>
                         <div style="display:flex;flex-direction:column;gap:14px">
                             <div class="form-group"><label class="lbl">Site Name</label><input class="inp"
-                                    value="FateSpy.com" /></div>
+                                    id="set-site-name" value="FateSpy.com" /></div>
                             <div class="form-group"><label class="lbl">Default Language</label>
-                                <select class="inp">
-                                    <option>English</option>
-                                    <option>Romanian</option>
+                                <select class="inp" id="set-language">
+                                    <option value="en">English</option>
+                                    <option value="ro">Romanian</option>
                                 </select>
                             </div>
                             <div class="form-group"><label class="lbl">Default AI Provider</label>
-                                <select class="inp">
-                                    <option>Groq (llama-3.3-70b)</option>
-                                    <option>OpenAI (gpt-4o)</option>
-                                    <option>Gemini (2.0 Flash)</option>
+                                <select class="inp" id="set-default-ai">
+                                    <option value="groq">Groq (llama-3.3-70b)</option>
+                                    <option value="openai">OpenAI (gpt-4o)</option>
+                                    <option value="gemini">Gemini (2.0 Flash)</option>
                                 </select>
                             </div>
                             <div
@@ -1193,7 +1163,7 @@
                                     <div style="font-size:.75rem;color:var(--txt2)">Shows a maintenance page to visitors
                                     </div>
                                 </div>
-                                <label class="toggle"><input type="checkbox" />
+                                <label class="toggle"><input type="checkbox" id="set-maintenance" />
                                     <div class="toggle-track"></div>
                                     <div class="toggle-thumb"></div>
                                 </label>
@@ -1204,7 +1174,7 @@
                                     <div style="font-size:.85rem;font-weight:600">GDPR Banner</div>
                                     <div style="font-size:.75rem;color:var(--txt2)">Show cookie consent banner</div>
                                 </div>
-                                <label class="toggle"><input type="checkbox" checked />
+                                <label class="toggle"><input type="checkbox" id="set-gdpr" checked />
                                     <div class="toggle-track"></div>
                                     <div class="toggle-thumb"></div>
                                 </label>
@@ -1215,32 +1185,34 @@
                                     <div style="font-size:.85rem;font-weight:600">User Registration</div>
                                     <div style="font-size:.75rem;color:var(--txt2)">Allow new signups</div>
                                 </div>
-                                <label class="toggle"><input type="checkbox" checked />
+                                <label class="toggle"><input type="checkbox" id="set-registration" checked />
                                     <div class="toggle-track"></div>
                                     <div class="toggle-thumb"></div>
                                 </label>
                             </div>
-                            <button class="btn btn-primary" style="margin-top:4px">&#128190; Save Settings</button>
+                            <button class="btn btn-primary" style="margin-top:4px"
+                                onclick="saveGeneralSettings()">&#128190; Save Settings</button>
                         </div>
                     </div>
                     <div class="panel">
                         <div class="panel-title">&#128302; Horoscope Generation Schedule</div>
                         <div style="display:flex;flex-direction:column;gap:12px">
                             <div class="form-group"><label class="lbl">Generation Time (daily)</label><input class="inp"
-                                    value="06:00" /></div>
+                                    id="set-gen-time" value="06:00" /></div>
                             <div class="form-group"><label class="lbl">AI Model for Generation</label>
-                                <select class="inp">
-                                    <option>Groq — llama-3.3-70b-versatile</option>
-                                    <option>OpenAI — gpt-4o-mini</option>
-                                    <option>Gemini — 2.0-flash</option>
+                                <select class="inp" id="set-gen-model">
+                                    <option value="groq">Groq — llama-3.3-70b-versatile</option>
+                                    <option value="openai">OpenAI — gpt-4o-mini</option>
+                                    <option value="gemini">Gemini — 2.0-flash</option>
                                 </select>
                             </div>
                             <div class="form-group"><label class="lbl">Temperature</label><input class="inp"
-                                    type="number" value="0.85" min="0" max="1" step="0.05" /></div>
+                                    id="set-gen-temp" type="number" value="0.85" min="0" max="1" step="0.05" /></div>
                             <div class="form-group"><label class="lbl">Max Tokens per Reading</label><input class="inp"
-                                    type="number" value="800" /></div>
+                                    id="set-gen-tokens" type="number" value="800" /></div>
                             <div style="display:flex;gap:10px;margin-top:6px">
-                                <button class="btn btn-primary">&#128190; Save Schedule</button>
+                                <button class="btn btn-primary" onclick="saveScheduleSettings()">&#128190; Save
+                                    Schedule</button>
                                 <button class="btn btn-ghost">&#9654; Run Now</button>
                             </div>
                         </div>
@@ -1271,7 +1243,8 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // API Key providers
+        const token = localStorage.getItem('fs_token');
+
         const providers = [
             { name: 'OpenAI', subname: 'GPT-4o / GPT-4o-mini', icon: '&#129302;', color: '#10a37f', id: 'openai' },
             { name: 'Groq', subname: 'Llama 3.3 70B (current)', icon: '&#9889;', color: '#f55036', id: 'groq' },
@@ -1286,17 +1259,110 @@
         ];
 
         const grid = document.getElementById('api-keys-grid');
-        providers.forEach(p => {
-            const saved = localStorage.getItem('adm_key_' + p.id) || '';
-            const masked = saved ? ('****' + saved.slice(-4)) : '';
-            grid.innerHTML += `
+
+        async function loadSettings() {
+            if (!token) return;
+            try {
+                const res = await fetch('/api/admin/settings.php', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const body = await res.json();
+                if (body.success) {
+                    renderApiGrid(body.data.settings || [], body.data.api_keys || []);
+                    populateSettingsForm(body.data.settings || []);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function populateSettingsForm(settingsList) {
+            const getVal = (key, def) => {
+                const s = settingsList.find(x => x.key === key);
+                return s ? s.val : def;
+            };
+
+            const gebi = (id) => document.getElementById(id);
+
+            if (gebi('set-site-name')) gebi('set-site-name').value = getVal('site_name', 'FateSpy.com');
+            if (gebi('set-language')) gebi('set-language').value = getVal('default_language', 'en');
+            if (gebi('set-default-ai')) gebi('set-default-ai').value = getVal('default_ai_provider', 'groq');
+            if (gebi('set-maintenance')) gebi('set-maintenance').checked = getVal('maintenance_mode', '0') === '1';
+            if (gebi('set-gdpr')) gebi('set-gdpr').checked = getVal('gdpr_enabled', '1') === '1';
+            if (gebi('set-registration')) gebi('set-registration').checked = getVal('registration_open', '1') === '1';
+
+            if (gebi('set-gen-time')) gebi('set-gen-time').value = getVal('gen_time', '06:00');
+            if (gebi('set-gen-model')) gebi('set-gen-model').value = getVal('gen_model', 'groq');
+            if (gebi('set-gen-temp')) gebi('set-gen-temp').value = getVal('gen_temp', '0.85');
+            if (gebi('set-gen-tokens')) gebi('set-gen-tokens').value = getVal('gen_tokens', '800');
+        }
+
+        async function saveGeneralSettings() {
+            const gebi = (id) => document.getElementById(id);
+            const payload = {
+                settings: {
+                    site_name: gebi('set-site-name').value,
+                    default_language: gebi('set-language').value,
+                    default_ai_provider: gebi('set-default-ai').value,
+                    maintenance_mode: gebi('set-maintenance').checked ? '1' : '0',
+                    gdpr_enabled: gebi('set-gdpr').checked ? '1' : '0',
+                    registration_open: gebi('set-registration').checked ? '1' : '0'
+                }
+            };
+            await sendSettingsReq(payload);
+        }
+
+        async function saveScheduleSettings() {
+            const gebi = (id) => document.getElementById(id);
+            const payload = {
+                settings: {
+                    gen_time: gebi('set-gen-time').value,
+                    gen_model: gebi('set-gen-model').value,
+                    gen_temp: gebi('set-gen-temp').value,
+                    gen_tokens: gebi('set-gen-tokens').value
+                }
+            };
+            await sendSettingsReq(payload);
+        }
+
+        async function sendSettingsReq(payload) {
+            try {
+                const res = await fetch('/api/admin/settings.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const body = await res.json();
+                if (body.success) {
+                    alert('Settings saved!');
+                } else {
+                    alert('Error: ' + body.error);
+                }
+            } catch (e) {
+                alert('Connection error');
+            }
+        }
+
+        function renderApiGrid(settingsList, dbKeys) {
+            grid.innerHTML = '';
+            providers.forEach(p => {
+                // Find saved key masked
+                let masked = '';
+                const keySetting = settingsList.find(s => s.key === p.id + '_api_key');
+                if (keySetting && keySetting.val_masked) {
+                    masked = keySetting.val_masked;
+                }
+                grid.innerHTML += `
   <div class="api-card">
     <div class="api-card-head">
       <div class="api-provider-logo" style="background:${p.color}22;color:${p.color}">${p.icon}</div>
       <div><div class="api-provider-name">${p.name}</div><div class="api-provider-model">${p.subname}</div></div>
     </div>
     <div class="api-key-row">
-      <input class="inp" id="key-${p.id}" type="password" placeholder="Enter API key..." value="${saved}" style="font-family:monospace;font-size:.82rem"/>
+      <input class="inp" id="key-${p.id}" type="password" placeholder="\${masked ? masked : 'Enter API key...'}" value="" style="font-family:monospace;font-size:.82rem"/>
       <button class="toggle-btn" onclick="toggleKey('${p.id}')">Show</button>
     </div>
     <div style="display:flex;gap:8px">
@@ -1304,7 +1370,10 @@
       <span id="status-${p.id}" style="font-size:.75rem;color:var(--txt2);align-self:center"></span>
     </div>
   </div>`;
-        });
+            });
+        }
+
+        loadSettings();
 
         function toggleKey(id) {
             const inp = document.getElementById('key-' + id);
@@ -1312,24 +1381,160 @@
         }
         function testKey(id, name) {
             const el = document.getElementById('status-' + id);
-            el.textContent = 'Testing...'; el.style.color = 'var(--txt2)';
-            setTimeout(() => { el.textContent = '&#10003; Connected'; el.style.color = 'var(--green)'; }, 1200);
+            el.innerHTML = 'Testing...'; el.style.color = 'var(--txt2)';
+            setTimeout(() => { el.innerHTML = '&#10003; Connected'; el.style.color = 'var(--green)'; }, 1200);
         }
-        function saveAllKeys() {
+        async function saveAllKeys() {
+            const payload = { api_keys: {} };
             providers.forEach(p => {
                 const val = document.getElementById('key-' + p.id)?.value;
-                if (val) localStorage.setItem('adm_key_' + p.id, val);
+                if (val) {
+                    payload.api_keys[p.id] = val;
+                }
             });
-            alert('All keys saved locally.');
+
+            if (Object.keys(payload.api_keys).length === 0) {
+                alert('No new keys to save.');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/settings.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const body = await res.json();
+                if (body.success) {
+                    alert('Keys saved successfully!');
+                    loadSettings(); // refresh to show masked keys
+                } else {
+                    alert('Error: ' + body.error);
+                }
+            } catch (e) {
+                alert('Connection error');
+            }
         }
         function testAllKeys() { providers.forEach(p => testKey(p.id, p.name)); }
 
-        // Template selector
-        function selectTemplate(el, name) {
-            document.querySelectorAll('.template-item').forEach(t => t.classList.remove('selected'));
-            el.classList.add('selected');
-            document.getElementById('tpl-name').textContent = el.querySelector('.font-weight-600, div').textContent;
+        // ── EMAIL TEMPLATES ──────────────────────────────────────
+        let allTemplates = [];
+        const templateListEl = document.querySelector('.template-list');
+        const tplNameEl = document.getElementById('tpl-name');
+        const inpTplSubject = document.getElementById('tpl-subject');
+        const inpTplPreheader = document.getElementById('tpl-preheader');
+        const inpTplBody = document.getElementById('tpl-body');
+        let currentTplSlug = '';
+
+        async function loadTemplates() {
+            if (!token) return;
+            try {
+                const res = await fetch('/api/admin/templates.php', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const body = await res.json();
+                if (body.success) {
+                    allTemplates = body.data || [];
+                    renderTemplateList();
+                    if (allTemplates.length > 0) {
+                        selectTemplate(allTemplates[0].slug);
+                    }
+                }
+            } catch (e) { console.error('Error loading templates', e); }
         }
+
+        function renderTemplateList() {
+            templateListEl.innerHTML = '';
+            allTemplates.forEach(t => {
+                const isSelected = t.slug === currentTplSlug ? 'selected' : '';
+                const triggerText = t.trigger ? `Triggered: ${t.trigger}` : 'Manual campaign';
+                templateListEl.innerHTML += `
+<div class="template-item ${isSelected}" onclick="selectTemplate('${t.slug}')" id="tpl-item-${t.slug}">
+    <div>
+        <div style="font-weight:600;font-size:.88rem">${t.name}</div>
+        <div style="font-size:.75rem;color:var(--txt2)">${triggerText}</div>
+    </div>
+</div>`;
+            });
+        }
+
+        async function selectTemplate(slug) {
+            document.querySelectorAll('.template-item').forEach(t => t.classList.remove('selected'));
+            const el = document.getElementById('tpl-item-' + slug);
+            if (el) el.classList.add('selected');
+
+            try {
+                const res = await fetch('/api/admin/templates.php?slug=' + slug, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const body = await res.json();
+                if (body.success) {
+                    const tpl = body.data;
+                    currentTplSlug = tpl.slug;
+                    tplNameEl.textContent = tpl.name;
+                    inpTplSubject.value = tpl.subject;
+                    inpTplPreheader.value = tpl.preheader || '';
+                    inpTplBody.value = tpl.body_html;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function newTemplate() {
+            document.querySelectorAll('.template-item').forEach(t => t.classList.remove('selected'));
+            currentTplSlug = 'new';
+            tplNameEl.textContent = 'New Template';
+            inpTplSubject.value = '';
+            inpTplPreheader.value = '';
+            inpTplBody.value = '';
+        }
+
+        async function saveTemplate() {
+            if (!currentTplSlug) return;
+
+            let saveSlug = currentTplSlug;
+            let saveName = tplNameEl.textContent;
+
+            if (currentTplSlug === 'new') {
+                saveName = prompt('Enter template name:', 'My New Template');
+                if (!saveName) return;
+                saveSlug = saveName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            }
+
+            const payload = {
+                slug: saveSlug,
+                name: saveName,
+                subject: inpTplSubject.value,
+                preheader: inpTplPreheader.value,
+                body_html: inpTplBody.value,
+                trigger: currentTplSlug === 'new' ? '' : undefined // only set blank trigger for new ones
+            };
+
+            try {
+                const res = await fetch('/api/admin/templates.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const body = await res.json();
+                if (body.success) {
+                    alert('Template saved!');
+                    await loadTemplates();
+                    selectTemplate(saveSlug);
+                } else {
+                    alert('Error saving template: ' + body.error);
+                }
+            } catch (e) { alert('Connection error'); }
+        }
+
+        // Load data on start
+        loadSettings();
+        loadTemplates();
 
         // ── AUTH GUARD ────────────────────────────────────────
         (function checkAdminAuth() {

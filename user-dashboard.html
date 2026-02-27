@@ -1077,14 +1077,9 @@
                     <div class="img-category-desc">Used for: <strong style="color:var(--txt)">Palm Reading AI</strong> —
                         the left hand reveals your innate potential and inherited traits.</div>
                     <div class="stored-images" id="grid-left-palm">
-                        <div class="stored-img">
-                            <img src="https://placehold.co/200x200/1a1a3e/d4a853?text=L.Palm+1" alt="Left palm 1" />
-                            <span class="img-date">Feb 20</span>
-                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
-                        </div>
                         <div class="add-img-btn">
                             &#43;
-                            <input type="file" accept="image/*" onchange="addImg(this,'grid-left-palm')" />
+                            <input type="file" accept="image/*" onchange="addImg(this,'palm_left')" />
                         </div>
                     </div>
                 </div>
@@ -1095,14 +1090,9 @@
                     <div class="img-category-desc">Used for: <strong style="color:var(--txt)">Palm Reading AI</strong> —
                         the right hand shows your current life path and choices.</div>
                     <div class="stored-images" id="grid-right-palm">
-                        <div class="stored-img">
-                            <img src="https://placehold.co/200x200/1a1a3e/d4a853?text=R.Palm+1" alt="Right palm 1" />
-                            <span class="img-date">Feb 20</span>
-                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
-                        </div>
                         <div class="add-img-btn">
                             &#43;
-                            <input type="file" accept="image/*" onchange="addImg(this,'grid-right-palm')" />
+                            <input type="file" accept="image/*" onchange="addImg(this,'palm_right')" />
                         </div>
                     </div>
                 </div>
@@ -1115,11 +1105,11 @@
                     <div class="stored-images" id="grid-aura">
                         <div class="add-img-btn" style="aspect-ratio:1">
                             &#43;
-                            <input type="file" accept="image/*" onchange="addImg(this,'grid-aura')" />
+                            <input type="file" accept="image/*" onchange="addImg(this,'aura')" />
                         </div>
                     </div>
-                    <div style="margin-top:10px;font-size:.75rem;color:var(--txt2);opacity:.6">No face images uploaded
-                        yet. <span style="color:var(--purple-l);cursor:pointer"
+                    <div style="margin-top:10px;font-size:.75rem;color:var(--txt2);opacity:.6">Upload a clear
+                        front-facing photo. <span style="color:var(--purple-l);cursor:pointer"
                             onclick="document.querySelector('#grid-aura input').click()">Upload now</span></div>
                 </div>
 
@@ -1128,175 +1118,163 @@
                     <div class="img-category-title">&#9749; Coffee Cup</div>
                     <div class="img-category-desc">Used for: <strong style="color:var(--txt)">Coffee Reading AI</strong>
                         — photograph the inside of the cup after drinking. Tip it to drain grounds first.</div>
-                    <div class="stored-images" id="grid-coffee">
-                        <div class="stored-img">
-                            <img src="https://placehold.co/200x200/1a1a3e/b45309?text=Cup+1" alt="Coffee cup 1" />
-                            <span class="img-date">Feb 25</span>
-                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
-                        </div>
-                        <div class="stored-img">
-                            <img src="https://placehold.co/200x200/1a1a3e/b45309?text=Cup+2" alt="Coffee cup 2" />
-                            <span class="img-date">Feb 10</span>
-                            <button class="del-btn" onclick="delImg(this)">&#10005;</button>
-                        </div>
-                        <div class="add-img-btn">
-                            &#43;
-                            <input type="file" accept="image/*" onchange="addImg(this,'grid-coffee')" />
-                        </div>
+                    <div class="add-img-btn">
+                        &#43;
+                        <input type="file" accept="image/*" onchange="addImg(this,'coffee')" />
                     </div>
                 </div>
-
             </div>
 
-            <div
-                style="margin-top:20px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:10px;padding:16px;font-size:.82rem;color:var(--txt2)">
-                &#128274; <strong style="color:var(--txt)">Privacy:</strong> Your images are encrypted at rest and used
-                exclusively for AI reading generation. They are never shared or used for training AI models. You can
-                delete them at any time.
-            </div>
         </div>
 
-        <!-- ═══ HISTORY ═══ -->
-        <div class="section" id="section-history">
-            <div class="panel-title" style="font-family:'Cinzel',serif;font-size:1.2rem;margin-bottom:20px">&#128203;
-                Reading History</div>
+        <div
+            style="margin-top:20px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:10px;padding:16px;font-size:.82rem;color:var(--txt2)">
+            &#128274; <strong style="color:var(--txt)">Privacy:</strong> Your images are encrypted at rest and used
+            exclusively for AI reading generation. They are never shared or used for training AI models. You can
+            delete them at any time.
+        </div>
+    </div>
 
-            <div class="history-item">
-                <div class="hist-icon">&#128302;</div>
-                <div style="flex:1">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                        <div class="hist-title">Personal Horoscope — Pisces</div>
-                        <span class="hist-tag tag-personal">Personal</span>
-                    </div>
-                    <div class="hist-date">Feb 27, 2026 — 11:42</div>
-                    <div class="hist-preview">"The cosmic tides are shifting in your favor. Venus entering your 7th
-                        house brings new romantic possibilities..."</div>
-                </div>
-                <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
-            </div>
+    <!-- ═══ HISTORY ═══ -->
+    <div class="section" id="section-history">
+        <div class="panel-title" style="font-family:'Cinzel',serif;font-size:1.2rem;margin-bottom:20px">&#128203;
+            Reading History</div>
 
-            <div class="history-item">
-                <div class="hist-icon">&#128071;</div>
-                <div style="flex:1">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                        <div class="hist-title">Palm Reading — Left &amp; Right</div>
-                        <span class="hist-tag tag-personal">AI Service</span>
-                    </div>
-                    <div class="hist-date">Feb 20, 2026 — 09:15</div>
-                    <div class="hist-preview">"Your life line shows remarkable resilience. The break at the midpoint
-                        suggests a significant life transition around age 35..."</div>
+        <div class="history-item">
+            <div class="hist-icon">&#128302;</div>
+            <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                    <div class="hist-title">Personal Horoscope — Pisces</div>
+                    <span class="hist-tag tag-personal">Personal</span>
                 </div>
-                <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
+                <div class="hist-date">Feb 27, 2026 — 11:42</div>
+                <div class="hist-preview">"The cosmic tides are shifting in your favor. Venus entering your 7th
+                    house brings new romantic possibilities..."</div>
             </div>
-
-            <div class="history-item">
-                <div class="hist-icon">&#9749;</div>
-                <div style="flex:1">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                        <div class="hist-title">Coffee Cup Reading</div>
-                        <span class="hist-tag tag-personal">AI Service</span>
-                    </div>
-                    <div class="hist-date">Feb 10, 2026 — 18:30</div>
-                    <div class="hist-preview">"A serpent symbol near the rim indicates transformation is imminent. The
-                        butterfly at the base points to creative renewal..."</div>
-                </div>
-                <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
-            </div>
-
-            <div class="history-item">
-                <div class="hist-icon">&#127775;</div>
-                <div style="flex:1">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                        <div class="hist-title">Daily Horoscope — Pisces</div>
-                        <span class="hist-tag tag-daily">General</span>
-                    </div>
-                    <div class="hist-date">Feb 27, 2026 — 08:00</div>
-                    <div class="hist-preview">"Today your empathy draws people closer. Trust your heart's intuition in
-                        career decisions..."</div>
-                </div>
-            </div>
+            <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
         </div>
 
-        <!-- ═══ PROFILE ═══ -->
-        <div class="section" id="section-profile">
-            <div class="profile-grid">
-                <div>
-                    <div class="profile-card">
-                        <div class="profile-avatar">M</div>
-                        <div class="profile-name">Maria Ionescu</div>
-                        <div class="profile-email">maria@example.com</div>
-                        <span class="plan-badge plan-free">Free Plan</span>
-                        <div style="margin-top:16px;padding-top:16px;border-top:var(--border)">
-                            <button class="btn btn-buy" style="width:100%;margin-bottom:8px"
-                                onclick="goSection('services')">&#9733; Upgrade to VIP</button>
-                            <button class="btn btn-danger" style="width:100%;font-size:.8rem">Sign Out</button>
-                        </div>
-                    </div>
-                    <div class="panel" style="margin-top:16px;padding:16px">
-                        <div
-                            style="font-size:.78rem;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">
-                            Account Stats</div>
-                        <div
-                            style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem">
-                            <span style="color:var(--txt2)">Member since</span><strong>Jan 15, 2026</strong>
-                        </div>
-                        <div
-                            style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem">
-                            <span style="color:var(--txt2)">Total readings</span><strong>12</strong>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.83rem"><span
-                                style="color:var(--txt2)">Services owned</span><strong>3</strong></div>
+        <div class="history-item">
+            <div class="hist-icon">&#128071;</div>
+            <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                    <div class="hist-title">Palm Reading — Left &amp; Right</div>
+                    <span class="hist-tag tag-personal">AI Service</span>
+                </div>
+                <div class="hist-date">Feb 20, 2026 — 09:15</div>
+                <div class="hist-preview">"Your life line shows remarkable resilience. The break at the midpoint
+                    suggests a significant life transition around age 35..."</div>
+            </div>
+            <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
+        </div>
+
+        <div class="history-item">
+            <div class="hist-icon">&#9749;</div>
+            <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                    <div class="hist-title">Coffee Cup Reading</div>
+                    <span class="hist-tag tag-personal">AI Service</span>
+                </div>
+                <div class="hist-date">Feb 10, 2026 — 18:30</div>
+                <div class="hist-preview">"A serpent symbol near the rim indicates transformation is imminent. The
+                    butterfly at the base points to creative renewal..."</div>
+            </div>
+            <button class="btn btn-ghost" style="flex-shrink:0;font-size:.78rem">View</button>
+        </div>
+
+        <div class="history-item">
+            <div class="hist-icon">&#127775;</div>
+            <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                    <div class="hist-title">Daily Horoscope — Pisces</div>
+                    <span class="hist-tag tag-daily">General</span>
+                </div>
+                <div class="hist-date">Feb 27, 2026 — 08:00</div>
+                <div class="hist-preview">"Today your empathy draws people closer. Trust your heart's intuition in
+                    career decisions..."</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ PROFILE ═══ -->
+    <div class="section" id="section-profile">
+        <div class="profile-grid">
+            <div>
+                <div class="profile-card">
+                    <div class="profile-avatar">M</div>
+                    <div class="profile-name">Maria Ionescu</div>
+                    <div class="profile-email">maria@example.com</div>
+                    <span class="plan-badge plan-free">Free Plan</span>
+                    <div style="margin-top:16px;padding-top:16px;border-top:var(--border)">
+                        <button class="btn btn-buy" style="width:100%;margin-bottom:8px"
+                            onclick="goSection('services')">&#9733; Upgrade to VIP</button>
+                        <button class="btn btn-danger" style="width:100%;font-size:.8rem">Sign Out</button>
                     </div>
                 </div>
-                <div>
-                    <div class="panel">
-                        <div class="panel-title"><span class="icon">&#128100;</span> Edit Profile</div>
-                        <div class="form-group"><label class="lbl">Full Name</label><input class="inp"
-                                value="Maria Ionescu" /></div>
-                        <div class="form-group"><label class="lbl">Email</label><input class="inp" type="email"
-                                value="maria@example.com" /></div>
-                        <div class="form-group"><label class="lbl">Zodiac Sign</label>
-                            <select class="inp">
-                                <option>Pisces &#9803;</option>
-                                <option>Aries &#9800;</option>
-                                <option>Taurus &#9801;</option>
-                                <option>Gemini &#9802;</option>
-                                <option>Cancer &#9803;</option>
-                                <option>Leo &#9804;</option>
-                                <option>Virgo &#9805;</option>
-                                <option>Libra &#9806;</option>
-                                <option>Scorpio &#9807;</option>
-                                <option>Sagittarius &#9808;</option>
-                                <option>Capricorn &#9809;</option>
-                                <option>Aquarius &#9810;</option>
-                            </select>
-                        </div>
-                        <div class="form-group"><label class="lbl">Date of Birth</label><input class="inp" type="date"
-                                value="1990-03-15" /></div>
-                        <div class="form-group"><label class="lbl">Language</label>
-                            <select class="inp">
-                                <option>English</option>
-                                <option>Romanian</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-buy" style="margin-top:4px">&#128190; Save Profile</button>
+                <div class="panel" style="margin-top:16px;padding:16px">
+                    <div
+                        style="font-size:.78rem;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">
+                        Account Stats</div>
+                    <div
+                        style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem">
+                        <span style="color:var(--txt2)">Member since</span><strong>Jan 15, 2026</strong>
                     </div>
-                    <div class="panel">
-                        <div class="panel-title"><span class="icon">&#128274;</span> Change Password</div>
-                        <div class="form-group"><label class="lbl">Current Password</label><input class="inp"
-                                type="password"
-                                placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" /></div>
-                        <div class="form-group"><label class="lbl">New Password</label><input class="inp"
-                                type="password"
-                                placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" /></div>
-                        <div class="form-group"><label class="lbl">Confirm New Password</label><input class="inp"
-                                type="password"
-                                placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" /></div>
-                        <button class="btn btn-ghost" style="margin-top:4px">Update Password</button>
+                    <div
+                        style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.83rem">
+                        <span style="color:var(--txt2)">Total readings</span><strong>12</strong>
                     </div>
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.83rem"><span
+                            style="color:var(--txt2)">Services owned</span><strong>3</strong></div>
+                </div>
+            </div>
+            <div>
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">&#128100;</span> Edit Profile</div>
+                    <div class="form-group"><label class="lbl">Full Name</label><input class="inp"
+                            value="Maria Ionescu" /></div>
+                    <div class="form-group"><label class="lbl">Email</label><input class="inp" type="email"
+                            value="maria@example.com" /></div>
+                    <div class="form-group"><label class="lbl">Zodiac Sign</label>
+                        <select class="inp">
+                            <option>Pisces &#9803;</option>
+                            <option>Aries &#9800;</option>
+                            <option>Taurus &#9801;</option>
+                            <option>Gemini &#9802;</option>
+                            <option>Cancer &#9803;</option>
+                            <option>Leo &#9804;</option>
+                            <option>Virgo &#9805;</option>
+                            <option>Libra &#9806;</option>
+                            <option>Scorpio &#9807;</option>
+                            <option>Sagittarius &#9808;</option>
+                            <option>Capricorn &#9809;</option>
+                            <option>Aquarius &#9810;</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label class="lbl">Date of Birth</label><input class="inp" type="date"
+                            value="1990-03-15" /></div>
+                    <div class="form-group"><label class="lbl">Language</label>
+                        <select class="inp">
+                            <option>English</option>
+                            <option>Romanian</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-buy" style="margin-top:4px">&#128190; Save Profile</button>
+                </div>
+                <div class="panel">
+                    <div class="panel-title"><span class="icon">&#128274;</span> Change Password</div>
+                    <div class="form-group"><label class="lbl">Current Password</label><input class="inp"
+                            type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" />
+                    </div>
+                    <div class="form-group"><label class="lbl">New Password</label><input class="inp" type="password"
+                            placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" /></div>
+                    <div class="form-group"><label class="lbl">Confirm New Password</label><input class="inp"
+                            type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" />
+                    </div>
+                    <button class="btn btn-ghost" style="margin-top:4px">Update Password</button>
                 </div>
             </div>
         </div>
+    </div>
 
     </div><!-- /content -->
 

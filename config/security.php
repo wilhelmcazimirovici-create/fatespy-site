@@ -281,12 +281,12 @@ class Security
         header(
             "Content-Security-Policy: " .
             "default-src 'self'; " .
-            "script-src 'self' 'unsafe-inline' https://js.stripe.com https://fonts.googleapis.com; " .
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " .
+            "script-src 'self' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://apis.google.com; " .
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; " .
             "font-src 'self' https://fonts.gstatic.com; " .
             "img-src 'self' data: https:; " .
-            "connect-src 'self' https://api.groq.com https://api.open-meteo.com https://nominatim.openstreetmap.org https://api.stripe.com; " .
-            "frame-src https://js.stripe.com https://hooks.stripe.com; " .
+            "connect-src 'self' https://api.groq.com https://api.open-meteo.com https://nominatim.openstreetmap.org https://api.stripe.com https://accounts.google.com; " .
+            "frame-src https://js.stripe.com https://hooks.stripe.com https://accounts.google.com; " .
             "form-action 'self'; " .
             "base-uri 'self'; " .
             "object-src 'none';"

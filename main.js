@@ -727,18 +727,8 @@ function setupModalAndServices() {
             const hour = document.getElementById('birth-hour').value;
             const minute = document.getElementById('birth-minute').value;
 
-            const sunSigns = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
-            const randomSign = sunSigns[Math.floor(Math.random() * sunSigns.length)];
-            const ascendant = sunSigns[Math.floor(Math.random() * sunSigns.length)];
-            const moon = sunSigns[Math.floor(Math.random() * sunSigns.length)];
-
-            let msg = `Your Birth Chart for ${day}/${month}/${year} at ${hour}:${minute}:<br/><br/>`;
-            msg += `<strong>Sun Sign:</strong> ${randomSign}<br/>`;
-            msg += `<strong>Moon Sign:</strong> ${moon}<br/>`;
-            msg += `<strong>Ascendant:</strong> ${ascendant}<br/><br/>`;
-            msg += `This unique cosmic configuration suggests a dynamic personality eager to learn. `;
-
-            showModal('Birth Chart Result', `<p>${generateOmniReading('Birth Chart', msg)}</p><p style="font-size:0.85rem; color:var(--text-muted); margin-top:15px;">Calculated by FateSpy Astrological Engine</p>`);
+            const params = new URLSearchParams({ day, month, year, hour, minute });
+            window.location.href = `/birth-chart.html?${params.toString()}`;
         });
     }
 
@@ -788,30 +778,47 @@ function setupModalAndServices() {
 // â”€â”€â”€â”€â”€ Dashboard Auth & Uploads â”€â”€â”€â”€â”€
 function setupDashboard() {
     const authBtn = document.getElementById('auth-btn');
-    const logoutBtn = document.getElementById('logout-btn');
     const dashboard = document.getElementById('dashboard');
     const hero = document.getElementById('hero');
 
     const uiUpdate = () => {
         if (appState.isLoggedIn) {
-            dashboard.style.display = 'block';
-            hero.style.display = 'none';
-            authBtn.style.display = 'none';
+            if (dashboard) dashboard.style.display = 'block';
+            if (hero) hero.style.display = 'none';
+            if (authBtn) {
+                authBtn.textContent = 'Logout';
+                authBtn.href = '#';
+                authBtn.style.display = 'inline-flex';
+            }
         } else {
-            dashboard.style.display = 'none';
-            hero.style.display = 'flex';
-            authBtn.style.display = 'inline-flex';
+            if (dashboard) dashboard.style.display = 'none';
+            if (hero) hero.style.display = 'flex';
+            if (authBtn) {
+                authBtn.textContent = 'Login';
+                authBtn.href = '/login.html';
+                authBtn.style.display = 'inline-flex';
+            }
             // Reset state
             appState.hasPalm = appState.hasFace = appState.hasCoffee = false;
+            const omniStatus = document.getElementById('omni-status');
+            if (omniStatus) {
+                omniStatus.textContent = 'Standby';
+                omniStatus.style.color = 'white';
+            }
             document.querySelectorAll('#dashboard .bento-card').forEach(c => c.style.borderColor = 'rgba(255,255,255,0.08)');
             document.querySelectorAll('#dashboard .icon').forEach(i => i.style.opacity = '0.5');
-            document.getElementById('omni-status').textContent = 'Standby';
-            document.getElementById('omni-status').style.color = 'white';
         }
     };
 
-    if (authBtn) authBtn.addEventListener('click', (e) => { e.preventDefault(); appState.isLoggedIn = true; uiUpdate(); });
-    if (logoutBtn) logoutBtn.addEventListener('click', () => { appState.isLoggedIn = false; uiUpdate(); });
+    if (authBtn) authBtn.addEventListener('click', (e) => {
+        if (appState.isLoggedIn) {
+            e.preventDefault();
+            appState.isLoggedIn = false;
+            localStorage.removeItem('fatespy_token');
+            uiUpdate();
+        }
+        // When not logged in, the href="/login.html" handles navigation
+    });
 
     const checkOmniStatus = () => {
         const count = [appState.hasPalm, appState.hasFace, appState.hasCoffee].filter(Boolean).length;
