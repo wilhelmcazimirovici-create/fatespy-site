@@ -45,7 +45,7 @@ define('STRIPE_WEBHOOK_SECRET', 'whsec_CHANGE_THIS');
 
 // ── Google OAuth ──
 // Get from: console.cloud.google.com → APIs & Services → Credentials → OAuth 2.0 Client IDs
-define('GOOGLE_CLIENT_ID', 'CHANGE_THIS.apps.googleusercontent.com');
+define('GOOGLE_CLIENT_ID', '319772083654-c68509hk8ihp206q9f8u1rqs7783obvj.apps.googleusercontent.com');
 
 // ── Environment ──
 define('DEBUG', false);  // set true on dev, false on production
