@@ -683,198 +683,266 @@
 
     </div><!-- /card -->
 
-    <script>
-        const A         '/api';
+    <parameter>
+        const API = '/api';
 
-        // ── Already logged in? Redirect by role ─        ─────────────
+        // ── Already logged in? Redirect by role ──────────────────────
         (function () {
-            const t = localStorage.getItem('fs_to        );
-    const u = JSON.parse(localStorage.getItem('fs_user')        'null');
-            if (t && u) redirect(u.ro        
-})();
+            const t = localStorage.getItem('fs_token');
+            const u = JSON.parse(localStorage.getItem('fs_user') || 'null');
+            if (t && u) redirect(u.role);
+        })();
 
-functio            ct(role) {
-            window.location.href = role === 'admin' ? '/admin.html'            r - dashboard.html';
+        function redirect(role) {
+            window.location.href = role === 'admin' ? '/admin.html' : '/user-dashboard.html';
         }
 
-        // ── Stars ──────────────────────────────        ───        ───────
+        // ── Stars ──────────────────────────────────────────────────────
         (function () {
-            const c         cument.getElementById('stars');
-            for (let i = i < 70; i + {
+            const c = document.getElementById('stars');
+            for (let i = 0; i < 70; i++) {
                 const s = document.createElement('div');
-             .className = 'star';
+                s.className = 'star';
                 const sz = Math.random() < .2 ? 3 : 2;
-                le.cssText =
-                    `left:${(Math.random() * 100).toFixed(1)}                                     h.random()*100).toFixed(1)}%;` +
-                    th:
-            }px; height:${ sz } px; ` +
-            `--d:${ (2 + Math.random()        toFixed(1) } s; ` +
-            `--delay:${ (Math.rand * 5).toFixed(1) } s; ` +
-                      ty:${(Math.random() * .4 + .1).toFixed(2)}`;
-            c.appendChild(s);
-
-// ── Tabs ─────────────────────────── ─ ─────────────────────
-doc u ment.querySelectorAll('.tab ').forEach(tab => {
-                tab.addEventListener('click', () => {
-        docume n t.querySelectorAll('.tab').forEach(t => t.classList.r e mo v e('active'));
-                    document.querySelectorAll('. f or m ').forEach(f => f.classList.r e mo v e('active                 tab.classList.add('        ve'               document.getElementById('form - ' + tab.dataset.form)        ssList.add('active');
-        clearMsg();
-                });
-            }            ─ Helpers ────────────────────────────                ───────
-                function showMsg(tx                rr') {
-    const el = document.getElementById('msg');
-            el.textContent = txt                ssName = 'msg show ' + type;
-        }
-function clearMsg() {
-            document.getElementByI                ssName = 'msg';
-        }
-        function se                Id, spinId, on) {
-            const btn = document.getElementById(btnI                t spin = doc            tEle        ById(Id);
-            const lbl = document.getElementById(btnId + '-lb        
-    btn.disabled = on;
-            spin.style.            = on ? 'block' : 'none';
-            if (lbl) lbl.s            play = on ? 'none' : ''            tion togglePw(id, eye) {
-                const el = me        etElementById(id);
-                = el.type === 'password' ? 'text' : 'passw              eye.textContent = el        e =        text' ? '🙈' : '👁';
+                s.style.cssText =
+                    `left:${(Math.random() * 100).toFixed(1)}%;` +
+                    `top:${(Math.random() * 100).toFixed(1)}%;` +
+                    `width:${sz}px; height:${sz}px;` +
+                    `--d:${(2 + Math.random() * 3).toFixed(1)}s;` +
+                    `--delay:${(Math.random() * 5).toFixed(1)}s;` +
+                    `opacity:${(Math.random() * .4 + .1).toFixed(2)}`;
+                c.appendChild(s);
             }
-            async function post(url, body) {
-          nst r = await fetch(API + url, {
-                method:
-                    headers: { 'Content-Type': 'applica            n' },
-                body: JSON.stringify(body),
-    }            eturn r.json();
-        }
+        })();
 
-// ── Password strength ──────────            ───────────────────
-func            engthCheck(pw) {
-            let s = 0;
-            if (pw.lengt             s++;
-            if (pw.length >= 12) s++;
-            if (/[A-Z]/.test(p        s++          if (/[0-9]/.test(pw)) s++;
-            if (/[^A-Za-z0-9]/.test(p        s++;
-            const cfg = [
-                {
-                    w: '20%', c: '#ef4444', l: 'Very wea                  { w:'40% ', c:'#f97316', l:'Weak' },
-            { w: '60%', c: '#eab308', l: 'Fair' },
-                   % ', c:'#22c55e', l:'Strong' },
-        { w        0% '        #10b981', l: 'Very strong' },
-            ];
-            const f = cfg[s] |        ;
-            const fill = document.g            tById('sfill');
-            const lbl = document.getElementByI            );
-            fill.style.width = f.w || '0';
-            fill.style.ba = f.c || 'tran            ;
-            lbl.textConte = f.l || lbl.style.color = f.c || '';
-            LOGIN ────────────────────────            ─────────────────
-            let pending2F;
-
-            document.getElementById('form-login            entListener('subm => {
-                e.ventDefault(); clearMsg();
-    cons                cument.getEle ntById('l-email').trim();
-                const pw                 t.getElementB d('l-pw').value;
-                (!email || !pw)                 sg('Please en r email and passw ;
-    setLoading('btn-login-sp ', true);
-                try      const res = awa                th/login.php', { email, password website: '' });
-                    .ok             showMsg(res.error || 'Login failed.')              if (res.data.r uires_2fa                    pending2FA = { email, pas            w, challenge: re data.challe            n };
-            howTwoFA(); return;
-        }
-        onSuccess(res.data);
-    } cat         showMsg('Network error. Check your conne            ; }
-    finally {
-            setLoading('btn-login'                spin',false); }
-                FA ──────────────────────────────────────────────                on showTwoFA() {
-                documen            elec            .form').forEach(f        f.c        List.remove('active'));
-    document.getElementById('tabs'        yle.visibility = 'hidden           document.getElementById('twofa').classList.add('show');
-    document.getEleme            twofa - code').focus()            tion cancel2               pending2  null;
-    document.getElementById('twofa').classList.r            how');
-    document.getElementById('tabs').style.visibility = '';
-                ment.getElementById('form-login').classList.add('active');
+        // ── Tabs ───────────────────────────────────────────────────────
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('form-' + tab.dataset.form).classList.add('active');
                 clearMsg();
-            }
-            nction submit2FA() {
-                const code = document.getE            Id('tw                alue.replace(/\D/g,'');
-    if(code.length !== 6) return showMsg('Enter the 6-d                ;
-    clearMsg();
-            try {
-                const v = await post('/                ?action=verify', {
-                    ng2FA?.user_id, cod                    hallenge_token: pending2FA?.challenge,
-                });
-                if (!v.ok) r                    error || 'Invalid code.');
-                const res = await post('/auth/l                             email: pending2FA.email, password: pending2FA.p                         website: '', twofa_verified: pending2FA.challenge,
-                        if (!res.ok) return showMsg(res.error || 'Login                        onSu                ta)                h { showMsg('Verification             Try again.'); }
-                etElementById('twofa-code').addEventListener('keydown', e              if (e.key                  submit2FA();
             });
+        });        // ── Helpers ────────────────────────────────────────────────────
+        function showMsg(txt, type = 'err') {
+            const el = document.getElementById('msg');
+            el.textContent = txt;
+            el.className = 'msg show ' + type;
+        }
 
-            // ── REGISTER ──────────────────            ──        ─────        ─────
-            document.getElementById('form-register').addEventLis        r('submit', async e => {
-                tDefault(); clearMsg();
-                const name = document.getElementById            ').value.trim();
-                const email = document.getElementById('r-ema            ue.trim();
-              pw                    etElementById('r-pw').value;
-                if (!name || !email || !pw('All fields are required.');
-                btn - re                    ',true);
-                try {
-                    const res = a                auth                p', { name, email, password: pw, website: '' });
-                    if                eturn showMsg(res.error || 'Registration failed                 showMsg('Account created! ✨ Check your email to act);
-                    document.getEl                    register').reset();
-        doc                    ById('sfill')                    0';
-                    document.getElementById('s                nten                } catch { showMsg('Network error.Please try again.'); }
-    finally                g('btn-reg', 'btn-reg-spin', fals            ;
+        function clearMsg() {
+            document.getElementById('msg').className = 'msg';
+        }
 
-// ── F                RD ────────────────────────────────────────
-             s        org        ) {
-                e.preventDefault();
-                document.querySelectorAll('.form').forEac.classList.remove('active'));
-                do nt.ge        mentById('tabs').style.v            y = 'hidden';
-                do etElementById('form            ).classList.add('active');
-    clearMsg();
-}
-            function cancelFor                document.getElementById('form-forgot').classList.rem            ive');
-            document.getElementById('tabs').style.visibility = '            ocument.getE        ntB        'form - login').classList.add('active');
+        function setLoading(btnId, spinId, on) {
+            const btn = document.getElementById(btnId);
+            const spin = document.getElementById(spinId);
+            const lbl = document.getElementById(btnId + '-lbl');
+            btn.disabled = on;
+            spin.style.display = on ? 'block' : 'none';
+            if (lbl) lbl.style.display = on ? 'none' : '';
+        }
+
+        function togglePw(id, eye) {
+            const el = document.getElementById(id);
+            el.type = el.type === 'password' ? 'text' : 'password';
+            eye.textContent = el.type === 'text' ? '🙈' : '👁';
+        }
+
+        async function post(url, body) {
+            const r = await fetch(API + url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+            return r.json();
+        }
+
+        // ── Password strength ──────────────────────────────────────────
+        function strengthCheck(pw) {
+            let s = 0;
+            if (pw.length >= 8) s++;
+            if (pw.length >= 12) s++;
+            if (/[A-Z]/.test(pw)) s++;
+            if (/[0-9]/.test(pw)) s++;
+            if (/[^A-Za-z0-9]/.test(pw)) s++;
+            const cfg = [
+                { w: '20%', c: '#ef4444', l: 'Very weak' },
+                { w: '40%', c: '#f97316', l: 'Weak' },
+                { w: '60%', c: '#eab308', l: 'Fair' },
+                { w: '80%', c: '#22c55e', l: 'Strong' },
+                { w: '100%', c: '#10b981', l: 'Very strong' },
+            ];
+            const f = cfg[s] || cfg[0];
+            const fill = document.getElementById('sfill');
+            const lbl = document.getElementById('slbl');
+            fill.style.width = f.w || '0';
+            fill.style.background = f.c || 'transparent';
+            lbl.textContent = f.l || '';
+            lbl.style.color = f.c || '';
+        }
+
+        // ── LOGIN ──────────────────────────────────────────────────────
+        let pending2FA;
+
+        document.getElementById('form-login').addEventListener('submit', async e => {
+            e.preventDefault();
+            clearMsg();
+            const email = document.getElementById('l-email').value.trim();
+            const pw = document.getElementById('l-pw').value;
+            if (!email || !pw) return showMsg('Please enter email and password.');
+            setLoading('btn-login', 'btn-login-spin', true);
+            try {
+                const res = await post('/auth/login.php', { email, password: pw, website: '' });
+                if (!res.ok) return showMsg(res.error || 'Login failed.');
+                if (res.data.requires_2fa) {
+                    pending2FA = { email, password: pw, challenge: res.data.challenge, user_id: res.data.user_id };
+                    showTwoFA();
+                    return;
+                }
+                onSuccess(res.data);
+            } catch { showMsg('Network error. Check your connection.'); }
+            finally { setLoading('btn-login', 'btn-login-spin', false); }
+        });
+
+        // ── 2FA ────────────────────────────────────────────────────────
+        function showTwoFA() {
+            document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+            document.getElementById('tabs').style.visibility = 'hidden';
+            document.getElementById('twofa').classList.add('show');
+            document.getElementById('twofa-code').focus();
+        }
+
+        function cancel2FA() {
+            pending2FA = null;
+            document.getElementById('twofa').classList.remove('show');
+            document.getElementById('tabs').style.visibility = '';
+            document.getElementById('form-login').classList.add('active');
             clearMsg();
         }
-d        ent.getElementById('form-forgot'            ntListener('submit', async e => {
-            e.preve                 clearMsg();
-            const email = document.getElementById('f-                e.trim()             (            return showMsg('Ent            email address.');
-    setLoading('btn-forgot', got - spin',true);
-    try {
-                const res = await post('/au            t.php', { email });
-                showMsg(res.data?.mes            'If registered, a r                s sent.', 'ok');
-            } catch { showMsg('Network error.'); }
-            Loading('btn-for                    -spin', false);            // ── SUC         →         rect by role ────────────────────────────
-            function onSucce        ata) {
-            localStorage.setItem('fs_token', data.token);
-            localStorage.setItem('            ,  JSON.stringify(da            );
-    showM            ome back!  ecting…', 'ok');
-    setTimeout(() => redirect(data.e), 700);
-        }  ── GOOGLE SIGN - IN ──────────────────────────────────            // Set your Google OAuth Client ID here (or fetch from /api/admin            s)
-const GID = 'REPLACE_WITH_GOOGLE_CLIENT_ID';
 
-        window.onGoogleLibraryLoad = () {
+        async function submit2FA() {
+            const code = document.getElementById('twofa-code').value.replace(/\D/g, '');
+            if (code.length !== 6) return showMsg('Enter the 6-digit code.');
+            clearMsg();
+            try {
+                const v = await post('/auth/2fa.php?action=verify', {
+                    user_id: pending2FA?.user_id,
+                    code,
+                    challenge_token: pending2FA?.challenge,
+                });
+                if (!v.ok) return showMsg(v.error || 'Invalid code.');
+                const res = await post('/auth/login.php', {
+                    email: pending2FA.email,
+                    password: pending2FA.password,
+                    website: '',
+                    twofa_verified: pending2FA.challenge,
+                });
+                if (!res.ok) return showMsg(res.error || 'Login failed.');
+                onSuccess(res.data);
+            } catch { showMsg('Verification failed. Try again.'); }
+        }
+
+        document.getElementById('twofa-code').addEventListener('keydown', e => {
+            if (e.key === 'Enter') submit2FA();
+        });
+
+        // ── REGISTER ──────────────────────────────────────────────────
+        document.getElementById('form-register').addEventListener('submit', async e => {
+            e.preventDefault();
+            clearMsg();
+            const name = document.getElementById('r-name').value.trim();
+            const email = document.getElementById('r-email').value.trim();
+            const pw = document.getElementById('r-pw').value;
+            if (!name || !email || !pw) return showMsg('All fields are required.');
+            setLoading('btn-reg', 'btn-reg-spin', true);
+            try {
+                const res = await post('/auth/register.php', { name, email, password: pw, website: '' });
+                if (!res.ok) return showMsg(res.error || 'Registration failed.');
+                showMsg('Account created! ✨ Check your email to activate it.', 'ok');
+                document.getElementById('form-register').reset();
+                document.getElementById('sfill').style.width = '0';
+                document.getElementById('slbl').textContent = '';
+            } catch { showMsg('Network error. Please try again.'); }
+            finally { setLoading('btn-reg', 'btn-reg-spin', false); }
+        });
+
+        // ── FORGOT PASSWORD ────────────────────────────────────────────
+        function showForgot(e) {
+            e.preventDefault();
+            document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+            document.getElementById('tabs').style.visibility = 'hidden';
+            document.getElementById('form-forgot').classList.add('active');
+            clearMsg();
+        }
+
+        function cancelForgot() {
+            document.getElementById('form-forgot').classList.remove('active');
+            document.getElementById('tabs').style.visibility = '';
+            document.getElementById('form-login').classList.add('active');
+            clearMsg();
+        }
+
+        document.getElementById('form-forgot').addEventListener('submit', async e => {
+            e.preventDefault();
+            clearMsg();
+            const email = document.getElementById('f-email').value.trim();
+            if (!email) return showMsg('Enter your email address.');
+            setLoading('btn-forgot', 'btn-forgot-spin', true);
+            try {
+                const res = await post('/auth/forgot.php', { email });
+                showMsg(res.data?.message || 'If registered, a reset link was sent.', 'ok');
+            } catch { showMsg('Network error.'); }
+            finally { setLoading('btn-forgot', 'btn-forgot-spin', false); }
+        });
+
+        // ── SUCCESS → redirect by role ────────────────────────────────
+        function onSuccess(data) {
+            localStorage.setItem('fs_token', data.token);
+            localStorage.setItem('fs_user', JSON.stringify(data.user));
+            showMsg('Welcome back! Redirecting…', 'ok');
+            setTimeout(() => redirect(data.user.role), 700);
+        }
+
+        // ── GOOGLE SIGN-IN ─────────────────────────────────────────────
+        // Set your Google OAuth Client ID here (or fetch from /api/admin/settings)
+        const GID = 'REPLACE_WITH_GOOGLE_CLIENT_ID';
+
+        window.onGoogleLibraryLoad = () => {
             if (!GID || GID.includes('REPLACE')) return;
-               accoun                lize({ client_id: GID, callback: onGoogleToken });
+            google.accounts.id.initialize({ client_id: GID, callback: onGoogleToken });
         };
 
         function signInWithGoogle() {
-            GID.includes('REPLACE')) {
-                return showMsg('Google Sign-In                red on this server yet.', 'err');
+            if (!GID || GID.includes('REPLACE')) {
+                return showMsg('Google Sign-In not configured on this server yet.', 'err');
             }
-            google.accounts.id.prompt(function onGoogleToken(response) {
-                const btn = tElementById('btn-google');
-                if (btn) btn.disabled = true                sg();
-                try {
-                    const res = await fetch('/api/auth/            hp', {
-                        hod: 'POST',
-                        headers: {
-                            'Content-            application/                         body: JSON.stringify({ id_token: response.credent                        });             const data = await res.json();
-        if(!data.ok)                   showMsg(data.er            Google Sign - In faile            r');
+            google.accounts.id.prompt();
+        }
+
+        async function onGoogleToken(response) {
+            const btn = document.getElementById('btn-google');
+            if (btn) btn.disabled = true;
+            clearMsg();
+            try {
+                const res = await fetch('/api/auth/google.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id_token: response.credential }),
+                });
+                const data = await res.json();
+                if (!data.ok) {
+                    showMsg(data.error || 'Google Sign-In failed.', 'err');
                     if (btn) btn.disabled = false;
                     return;
                 }
-             nSuccess(data.data);
+                onSuccess(data.data);
             } catch {
-                showMsg('Netw            r during Google Sign-In.', 'err');
-                if (btn) btn.disabled;
+                showMsg('Network error during Google Sign-In.', 'err');
+                if (btn) btn.disabled = false;
             }
         }
     </script>
