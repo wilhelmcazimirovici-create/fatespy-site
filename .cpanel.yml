@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/echipad1/fatespy.com/
-    - /bin/cp -R * $DEPLOYPATH
+    - rsync -a --exclude 'config/config.php' --exclude '.git/' --exclude '.cpanel.yml' ./ $DEPLOYPATH
