@@ -1,4 +1,4 @@
-﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FateSpy.com â€” Main JavaScript
    Starfield, Interactions, Animations
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
@@ -156,25 +156,15 @@ function setupMobileMenu() {
     });
 }
 
-// â”€â”€â”€â”€â”€ Tarot Card Flip & Omni Synergy â”€â”€â”€â”€â”€
+// ─── Tarot Card Flip ───
 function setupTarotFlip() {
     const widget = document.getElementById('widget-tarot');
+    if (!widget) return;
     widget.addEventListener('click', () => {
         widget.classList.toggle('flipped');
 
-        // Show modal with omni-synergy reading for Tarot
         setTimeout(() => {
-            const modal = document.getElementById('global-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalBody = document.getElementById('modal-body');
-            if (modal && appState.isLoggedIn) {
-                const defaultMsg = "The Sun brings joy, success, and positive clarity to your endeavors.";
-                const synergyMsg = generateOmniReading('The Sun (Tarot)', defaultMsg);
-
-                modalTitle.textContent = "Tarot Omni-Synergy";
-                modalBody.innerHTML = synergyMsg;
-                modal.classList.add('active');
-            }
+            window.location.href = '/tarot-card-of-the-day.html';
         }, 800);
     });
 }

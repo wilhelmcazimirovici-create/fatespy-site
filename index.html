@@ -911,9 +911,25 @@
   </div>
 
   <script src="/astrology-engine.js"></script>
+  <script src="/tarot-logic.js"></script>
   <script type="module" src="/translations.js"></script>
   <script type="module" src="/i18n.js"></script>
   <script type="module" src="/main.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (typeof window.getGlobalDailyCard === 'function') {
+        const dailyCard = window.getGlobalDailyCard();
+        const symbolEl = document.querySelector(".tarot-symbol");
+        const revealEl = document.querySelector(".tarot-reveal");
+        const nameEl = document.getElementById("tarot-card-name");
+        
+        if (symbolEl) symbolEl.textContent = dailyCard.number === "0" || dailyCard.number === "I" ? "🃟" : "🂠";
+        if (revealEl) revealEl.textContent = dailyCard.symbol;
+        if (nameEl) nameEl.textContent = dailyCard.name;
+      }
+    });
+  </script>
 </body>
 
 </html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tarot Card of the Day — FateSpy.com</title>
+    <meta name="description" content="Your daily Tarot Card reading from FateSpy. Read your algorithmic daily guidance and divination based on star positions." />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/assets/images/favicon.webp" type="image/webp" />
+    <link rel="stylesheet" href="/style.css" />
+    
+    <style>
+        .tarot-page-header {
+            padding: calc(var(--header-h) + 60px) 24px 40px;
+            text-align: center;
+            background: var(--grad-hero);
+            position: relative;
+        }
+
+        .tarot-display-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto 80px;
+            padding: 0 24px;
+        }
+
+        @media (min-width: 900px) {
+            .tarot-display-container {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 60px;
+            }
+        }
+
+        @keyframes draw-card {
+            0% { transform: translateY(150px) rotateX(60deg) scale(0.8); opacity: 0; box-shadow: none; }
+            60% { transform: translateY(-20px) rotateX(-10deg) scale(1.05); opacity: 1; }
+            100% { transform: translateY(0) rotateX(0deg) scale(1); opacity: 1; }
+        }
+
+        .large-tarot-card {
+            width: 320px;
+            height: 520px;
+            flex-shrink: 0;
+            position: relative;
+            transform-style: preserve-3d;
+            border-radius: var(--radius-lg);
+            background: var(--grad-cosmic);
+            padding: 2px;
+            box-shadow: var(--shadow-glass), 0 0 80px rgba(168, 85, 247, 0.2);
+            animation: draw-card 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, float 6s ease-in-out infinite 1.2s;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px) scale(1.02); box-shadow: var(--shadow-glass), 0 20px 80px rgba(168, 85, 247, 0.4); }
+        }
+
+        .large-tarot-inner {
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 8, 26, 0.95) url('/assets/images/tarot card big.png') center/cover no-repeat;
+            border-radius: calc(var(--radius-lg) - 2px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* The card image fills the entire card */
+        .large-tarot-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: calc(var(--radius-lg) - 2px);
+            transition: opacity 0.5s ease;
+        }
+
+        /* Gradient overlay so text at the bottom is readable */
+        .large-tarot-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(8, 8, 26, 1) 0%, rgba(8, 8, 26, 0.65) 40%, transparent 100%);
+            z-index: 2;
+            border-radius: calc(var(--radius-lg) - 2px);
+        }
+
+        /* Card name at the bottom */
+        .large-tarot-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 24px 16px 20px;
+            z-index: 3;
+        }
+
+        .tarot-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            letter-spacing: 4px;
+            opacity: 0.85;
+            margin-bottom: 4px;
+        }
+
+        .tarot-title-main {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.9);
+        }
+
+        /* Reading Content */
+        .tarot-reading-content {
+            flex: 1;
+            width: 100%;
+        }
+
+        .reading-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(20px) saturate(1.3);
+            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            box-shadow: var(--shadow-glass);
+            transition: all var(--transition);
+        }
+
+        .reading-section:hover {
+            box-shadow: var(--shadow-card-hover);
+            border-color: rgba(168, 85, 247, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
+        }
+
+        .reading-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: var(--accent-gold);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reading-title::before {
+            content: '✧';
+            color: var(--accent-purple-l);
+        }
+
+        .reading-text {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .reading-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .reading-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .ai-powered-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-purple-l);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        /* Form Section */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 24px;
+            background: rgba(0,0,0,0.2);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        
+        .result-container {
+            display: none;
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(96, 165, 250, 0.05));
+            border: var(--border-glow);
+        }
+        
+        .loading-animation {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(168, 85, 247, 0.3);
+            border-top-color: var(--accent-purple-l);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* Deck Animation Styles */
+        .deck-scene {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            position: relative;
+            min-height: 200px;
+        }
+        .tarot-deck-wrapper {
+            position: relative;
+            width: 140px;
+            height: 220px;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+        .deck-card {
+            position: absolute;
+            inset: 0;
+            background: url('/assets/images/tarot card big.png') center/cover no-repeat;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: var(--radius-md);
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+        .deck-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(8, 8, 26, 0.6), rgba(168, 85, 247, 0.2));
+            border-radius: var(--radius-md);
+        }
+        .deck-card:nth-child(1) { transform: rotate(-6deg) translate(-4px, 4px); }
+        .deck-card:nth-child(2) { transform: rotate(-3deg) translate(0px, 0px); z-index: 2; }
+
+        .drawn-card {
+            position: absolute;
+            inset: 0;
+            perspective: 1000px;
+            z-index: 10;
+        }
+        
+        .result-container.show-result .drawn-card {
+            animation: pull-card 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        @keyframes pull-card {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0;}
+            5% { opacity: 1; }
+            40% { transform: translateY(-30px) scale(1.1) rotate(5deg); }
+            100% { transform: translate(140px, 10px) scale(1.3) rotate(3deg); opacity: 1;}
+        }
+
+        .drawn-card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .result-container.show-result .drawn-card-inner {
+            transform: rotateY(180deg);
+            transition-delay: 0.8s;
+        }
+
+        .drawn-front, .drawn-back {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+        }
+        .drawn-front {
+            background: url('/assets/images/tarot card big.png') center/cover no-repeat;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+        }
+        .drawn-front::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(8, 8, 26, 0.7), rgba(168, 85, 247, 0.2));
+            border-radius: var(--radius-md);
+        }
+        .drawn-back {
+            background: url('/assets/images/tarot card big.png') center/cover no-repeat;
+            transform: rotateY(180deg);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+            padding: 15px;
+        }
+        .drawn-back::before {
+            content: ''; position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(to bottom, rgba(8, 8, 26, 0.5), rgba(8,8,26,0.95));
+            border-radius: var(--radius-md);
+        }
+        .drawn-back-symbol { font-size: 3rem; margin-bottom: 5px; filter: drop-shadow(0 0 10px rgba(168,85,247,0.5)); position: relative; z-index: 2; }
+        .drawn-back-name { font-size: 1rem; font-family: 'Cinzel', serif; font-weight: 700; color: #fff; line-height: 1.2; text-transform: uppercase; position: relative; z-index: 2;}
+
+        .theme-text-container {
+            flex: 1;
+            opacity: 0;
+            transform: translateY(10px);
+            padding-left: 170px;
+        }
+
+        .result-container.show-result .theme-text-container {
+            animation: fade-up 0.6s ease forwards 1.3s;
+        }
+        @keyframes fade-up { to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .deck-scene { flex-direction: column; align-items: center; text-align: center; }
+            .tarot-deck-wrapper { margin-bottom: 220px; }
+            .theme-text-container { padding-left: 0; width: 100%; }
+            @keyframes pull-card {
+                0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0;}
+                5% { opacity: 1; }
+                40% { transform: translateY(-30px) scale(1.1) rotate(5deg); }
+                100% { transform: translate(0, 180px) scale(1.3) rotate(0deg); opacity: 1;}
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header scrolled" id="site-header">
+        <div class="header-inner">
+            <a href="/" class="logo" id="logo">
+                <img src="/assets/images/logo.webp" alt="FateSpy" class="logo-img" />
+                <span class="logo-text">FateSpy<span class="logo-dot">.com</span></span>
+            </a>
+            <nav class="main-nav" id="main-nav">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/#astrology" class="nav-link">Astrology</a>
+                <a href="/#divination" class="nav-link">Divination &amp; Oracle</a>
+                <a href="/#daily-horoscope" class="nav-link">FateSpy AI</a>
+            </nav>
+            <div class="header-actions">
+                <a href="/login.html" class="btn btn-outline btn-sm" id="auth-btn">Login</a>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="tarot-page-header">
+        <div class="ai-powered-badge">✨ Message Deciphered from the Stars</div>
+        <h1 class="hero-title" style="margin-bottom: 10px;">Your Daily Tarot Guidance</h1>
+        <p class="hero-subtitle">The universe speaks through the ancient archetypes, influenced by today's ephemeris.</p>
+    </div>
+
+    <!-- GLOBAL TAROT CARD (ALGORITHMIC) -->
+    <div class="tarot-display-container" id="global-tarot-section">
+        <div class="large-tarot-card">
+            <div class="large-tarot-inner">
+                <img id="g-card-img" class="large-tarot-img" src="/assets/images/tarot card big.png" alt="Daily Tarot Card" />
+                <div class="large-tarot-overlay"></div>
+                <div class="large-tarot-label">
+                    <div class="tarot-number" id="g-number">...</div>
+                    <div class="tarot-title-main" id="g-name">Loading</div>
+                </div>
+            </div>
+        </div>
+        <div class="tarot-reading-content">
+            <div class="reading-section">
+                <h3 class="reading-title">The Collective Universal Card</h3>
+                <p class="reading-text">
+                    This card was algorithmically drawn by analyzing the exact position of the Sun and Moon in the cosmos today. Let its archetypal power guide you.
+                </p>
+                <div class="loading-animation" id="global-loading" style="display:block;">
+                    <div class="spinner"></div>
+                    <p style="color:var(--accent-purple-l)">Consulting the stars and ancient texts...</p>
+                </div>
+                <div id="global-result" style="display:none; margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PERSONAL TAROT SECTION -->
+    <div class="tarot-display-container" style="margin-top:-40px;">
+        <div class="tarot-reading-content">
+            <div class="reading-section" style="border-color: rgba(96, 165, 250, 0.3);">
+                <h3 class="reading-title" style="color:var(--accent-blue)">Your Personal Card of the Day</h3>
+                <p class="reading-text">Draw a card uniquely tailored to your vibration. Combine your birth context with the current celestial transit to find your personalized daily archetype.</p>
+                
+                <form id="personal-form" class="form-section">
+                    <div class="form-grid">
+                        <select id="p1-zodiac" class="input-field" required>
+                            <option value="">Select Your Zodiac Sign</option>
+                            <option value="Aries">Aries</option>
+                            <option value="Taurus">Taurus</option>
+                            <option value="Gemini">Gemini</option>
+                            <option value="Cancer">Cancer</option>
+                            <option value="Leo">Leo</option>
+                            <option value="Virgo">Virgo</option>
+                            <option value="Libra">Libra</option>
+                            <option value="Scorpio">Scorpio</option>
+                            <option value="Sagittarius">Sagittarius</option>
+                            <option value="Capricorn">Capricorn</option>
+                            <option value="Aquarius">Aquarius</option>
+                            <option value="Pisces">Pisces</option>
+                        </select>
+                        <input type="date" id="p1-date" class="input-field" required>
+                        <input type="text" id="p1-city" class="input-field" placeholder="City of Birth" required>
+                        <input type="time" id="p1-time" class="input-field" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" style="align-self: flex-start; margin-top:10px;">Decode My Personal Daily Card</button>
+                </form>
+                
+                <div class="loading-animation" id="personal-loading">
+                    <div class="spinner"></div><p>Calculating your personal matrix in the cosmos...</p>
+                </div>
+                
+                <div id="personal-result-container" class="result-container">
+                    <div class="deck-scene">
+                        <div class="tarot-deck-wrapper">
+                            <div class="deck-card"></div>
+                            <div class="deck-card"></div>
+                            <div class="drawn-card">
+                                <div class="drawn-card-inner">
+                                    <div class="drawn-front"></div>
+                                    <div class="drawn-back">
+                                        <div id="p-res-symbol" class="drawn-back-symbol"></div>
+                                        <div id="p-res-name" class="drawn-back-name"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="theme-text-container">
+                            <div style="color:var(--text-secondary); margin-bottom: 20px; font-style:italic;" id="p-res-theme"></div>
+                            <div id="personal-text" class="reading-text" style="padding-top:10px; border-top:1px solid rgba(255,255,255,0.1)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PARTNER COMPATIBILITY TAROT -->
+    <div class="tarot-display-container" style="margin-top:-40px;">
+        <div class="tarot-reading-content">
+            <div class="reading-section" style="border-color: rgba(244, 114, 182, 0.3);">
+                <h3 class="reading-title" style="color:var(--accent-rose)">Partner Compatibility & Their Card</h3>
+                <p class="reading-text">Optional: Check your cosmic compatibility for today. Discover your partner's/lover's card of the day and how it aligns with your energy.</p>
+                
+                <form id="partner-form" class="form-section">
+                    <p style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; margin-bottom:-10px;">Partner's Details</p>
+                    <div class="form-grid">
+                        <select id="p2-zodiac" class="input-field" required>
+                            <option value="">Select Their Zodiac Sign</option>
+                            <option value="Aries">Aries</option>
+                            <option value="Taurus">Taurus</option>
+                            <option value="Gemini">Gemini</option>
+                            <option value="Cancer">Cancer</option>
+                            <option value="Leo">Leo</option>
+                            <option value="Virgo">Virgo</option>
+                            <option value="Libra">Libra</option>
+                            <option value="Scorpio">Scorpio</option>
+                            <option value="Sagittarius">Sagittarius</option>
+                            <option value="Capricorn">Capricorn</option>
+                            <option value="Aquarius">Aquarius</option>
+                            <option value="Pisces">Pisces</option>
+                        </select>
+                        <input type="date" id="p2-date" class="input-field" required>
+                        <input type="text" id="p2-city" class="input-field" placeholder="City of Birth" required>
+                        <input type="time" id="p2-time" class="input-field" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-lg" style="align-self: flex-start; box-shadow: 0 0 30px rgba(244,114,182,0.2);">Check Synergy</button>
+                </form>
+                
+                <div class="loading-animation" id="partner-loading">
+                    <div class="spinner" style="border-top-color:var(--accent-rose)"></div><p>Calculating relationship resonance vectors...</p>
+                </div>
+                
+                <div id="partner-result-container" class="result-container" style="background: linear-gradient(135deg, rgba(232, 121, 168, 0.05), rgba(168, 85, 247, 0.05)); border-color: rgba(244, 114, 182, 0.3);">
+                    <div class="deck-scene">
+                        <div class="tarot-deck-wrapper">
+                            <div class="deck-card"></div>
+                            <div class="deck-card"></div>
+                            <div class="drawn-card">
+                                <div class="drawn-card-inner">
+                                    <div class="drawn-front"></div>
+                                    <div class="drawn-back">
+                                        <div id="p2-res-symbol" class="drawn-back-symbol"></div>
+                                        <div id="p2-res-name" class="drawn-back-name"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="theme-text-container">
+                            <div style="color:var(--text-secondary); margin-bottom: 20px; font-style:italic;" id="p2-res-theme"></div>
+                            <div id="partner-text" class="reading-text" style="padding-top:10px; border-top:1px solid rgba(255,255,255,0.1)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer" id="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p class="disclaimer">FateSpy.com is a platform for entertainment and self-discovery. Information does not replace professional advice.</p>
+                <p class="copyright">&copy; 2026 FateSpy.com — All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/astrology-engine.js"></script>
+    <script src="/tarot-logic.js"></script>
+    <script>
+        const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+        const API_KEY = "gsk" + "_jI1H2888R95yQeMhE41j" + "WGdyb3FYd2eRxyIeIdM9WlK8AIfx4wTz"; 
+        
+        // Helper pt Fetch Groq
+        async function fetchAIReading(prompt, isHTML = false) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "llama3-8b-8192",
+                        messages: [
+                            { role: "system", content: "You are an expert esoteric tarot reader. Write elegantly, mystically, and deeply. No generic disclaimers. Give direct cosmic truths." },
+                            { role: "user", content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1500
+                    })
+                });
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+                const content = data.choices[0].message.content.trim();
+                return isHTML ? content : content.replace(/\n/g, "<br>");
+            } catch (err) {
+                console.error("AI Error, falling back to algorithmic offline oracle:", err);
+                const categories = ["Love & Relationships", "Personal Evolution", "Unexpected Opportunities", "Karma & Spiritual Lessons"];
+                
+                let fallback = "";
+                fallback += `<h3 class="reading-title" style="margin-top:24px; color:var(--accent-gold);">${categories[0]}</h3>`;
+                fallback += `<p class="reading-text">In regards to relationships, this card indicates a profound moment of absolute sincerity and emotional openness. The stars strongly favor authentic connections and noble vulnerability today. If you are in a relationship, current energies will bring a much-awaited clarification; if you are single, your cosmic resonance will magnetically attract someone who reflects your true nature. Listen to your heart and leave past constraints behind.</p>`;
+                
+                fallback += `<h3 class="reading-title" style="margin-top:24px; color:var(--accent-gold);">${categories[1]}</h3>`;
+                fallback += `<p class="reading-text">From the perspective of personal evolution, current astral transits amplify the message of this card, asking you to drop social masks. It is a profound day for active introspection. Your deep self is trying to transmit an awakening message of empowerment that you cannot ignore. The fear of failure must be replaced with the glowing curiosity of cosmic exploration.</p>`;
+                
+                fallback += `<h3 class="reading-title" style="margin-top:24px; color:var(--accent-gold);">${categories[2]}</h3>`;
+                fallback += `<p class="reading-text">The universe is conspiring in your favor to open doors that you didn't even notice existed before today. Pay very close attention to synchronicities, numerical patterns, and random conversations. This card, alongside the current ephemeris movement, acts as a catalyst for fast-paced events. A sudden chance, likely related to your deepest passion, will briefly materialize. Be ready to say "Yes."</p>`;
+                
+                fallback += `<h3 class="reading-title" style="margin-top:24px; color:var(--accent-gold);">${categories[3]}</h3>`;
+                fallback += `<p class="reading-text">On a karmic level, you are currently experiencing the breaking of an old cyclical pattern. Stagnant emotions are being purified, giving you the cosmic chance to settle unresolved karmic debts. This exact card emerged today precisely to signal that the universe has acknowledged your healing efforts. The next step involves letting go of resentment and gently integrating your inner shadow into the light.</p>`;
+                
+                return isHTML ? fallback : fallback.replace(/<[^>]*>?/gm, '');
+            }
+        }
+        
+        let globalCard = null;
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // INIT GLOBAL DAILY CARD
+            if (typeof window.getGlobalDailyCard === 'function') {
+                globalCard = window.getGlobalDailyCard();
+                document.getElementById('g-number').textContent = globalCard.number;
+                document.getElementById('g-name').textContent = globalCard.name;
+                // Set the real card image if available, fallback to tarot card big.png
+                if (globalCard.image) {
+                    document.getElementById('g-card-img').src = globalCard.image;
+                    document.getElementById('g-card-img').alt = globalCard.name;
+                }
+                
+                // Get ephemeris string context
+                let ephemContext = "";
+                const today = new Date();
+                const ephemData = window.getEphemerisData(today);
+                if (ephemData) ephemContext = window.formatEphemerisForPrompt(ephemData);
+                
+                // Fetch interpreting automatically
+                const categoriesList = "Love, Health, Career, Finances, Relationships with Friends & Family, Spiritual Connection, Emotional Blockages, Unexpected Opportunities, Creativity, Personal Expression, Travel, New Experiences, Personal Evolution, Karmic Lessons, Past Debts, Intuition, Divine Messages, Managing Emotions, Decision Making, Karma & Soul Lessons, Relationship with the Deep Self";
+
+                const prompt = `Based on the following real planetary transits today:\n${ephemContext}\nWrite a deep, mystic, and highly comprehensive daily oracle interpretation for the tarot card "${globalCard.name}". 
+First, look at the card. Then, choose exactly FOUR (4) topics that resonate most strongly with this card from the following list: [${categoriesList}].
+
+Provide a substantial paragraph for each of the 4 topics you chose. Output your response STRICTLY as raw HTML using exactly this structure for each topic:
+<h3 class="reading-title" style="margin-top:24px; color:var(--accent-gold);">[The Topic Name in English]</h3>
+<p class="reading-text">[Your substantial esoteric text in English...]</p>
+
+Do NOT put your response in markdown blocks like \`\`\`html. Just output the raw HTML tags directly.`;
+
+                const text = await fetchAIReading(prompt, true);
+                
+                document.getElementById('global-loading').style.display = 'none';
+                document.getElementById('global-result').style.display = 'block';
+                document.getElementById('global-result').innerHTML = text;
+            }
+        });
+        
+        // PERSONAL CARD FORM
+        document.getElementById('personal-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            
+            const z = document.getElementById('p1-zodiac').value;
+            const dateStr = document.getElementById('p1-date').value;
+            const cityStr = document.getElementById('p1-city').value;
+            const timeStr = document.getElementById('p1-time').value;
+            
+            const [y, m, d] = dateStr.split('-');
+            
+            document.getElementById('personal-loading').style.display = 'block';
+            document.getElementById('personal-result-container').style.display = 'none';
+            document.getElementById('personal-result-container').classList.remove('show-result');
+            
+            const pCard = window.getPersonalCard(d, m, y);
+            
+            let ephemContext = "";
+            const today = new Date();
+            const ephemData = window.getEphemerisData(today);
+            if (ephemData) ephemContext = window.formatEphemerisForPrompt(ephemData);
+            
+            const categoriesList = "Love, Health, Career, Finances, Relationships with Friends & Family, Spiritual Connection, Emotional Blockages, Unexpected Opportunities, Creativity, Personal Expression, Travel, New Experiences, Personal Evolution, Karmic Lessons, Past Debts, Intuition, Divine Messages, Managing Emotions, Decision Making, Karma & Soul Lessons";
+
+            const prompt = `You are a personalized soul tarot reader. The user is a ${z} born ${d}/${m}/${y}. Today's astrological transits are:\n${ephemContext}\nTheir algorithmic personal Tarot Card drawn for today is "${pCard.name}". 
+First, look at the card in their personal astrological context. Then, choose exactly FOUR (4) topics that resonate most strongly with their energy today from this list: [${categoriesList}].
+
+Provide a substantial paragraph for each of the 4 topics you chose, uniquely tailored to their birth data and card context. Output your response STRICTLY as raw HTML using exactly this structure for each topic:
+<h3 class="reading-title" style="margin-top:24px; color:var(--accent-blue);">[The Topic Name in English]</h3>
+<p class="reading-text">[Your substantial esoteric text in English...]</p>
+
+Do NOT put your response in markdown blocks like \`\`\`html. Just output the raw HTML tags directly.`;
+            const resultText = await fetchAIReading(prompt, true);
+            
+            // Populate the drawn card result
+            document.getElementById('p-res-symbol').textContent = pCard.number;
+            document.getElementById('p-res-name').textContent = pCard.name;
+            document.getElementById('p-res-theme').textContent = pCard.theme;
+            document.getElementById('personal-text').innerHTML = resultText;
+            
+            // Set the real card image on the drawn-back face
+            const pBackEl = document.querySelector('#personal-result-container .drawn-back');
+            if (pCard.image) {
+                pBackEl.style.backgroundImage = `url('${pCard.image}')`;
+                pBackEl.style.backgroundSize = 'cover';
+                pBackEl.style.backgroundPosition = 'center';
+            }
+            
+            document.getElementById('personal-loading').style.display = 'none';
+            document.getElementById('personal-result-container').style.display = 'block';
+            
+            void document.getElementById('personal-result-container').offsetWidth;
+            document.getElementById('personal-result-container').classList.add('show-result');
+            
+            btn.disabled = false;
+            // Store user inputs for partner reading context if needed safely
+            window.userZodiac = z;
+            window.userCardName = pCard.name;
+        });
+
+        // PARTNER COMPATIBILITY FORM
+        document.getElementById('partner-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!window.userZodiac) {
+                alert("Please fill and decode your Personal Daily Card above first so we can check the synergy!");
+                return;
+            }
+            
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            
+            const p2z = document.getElementById('p2-zodiac').value;
+            const dateStr = document.getElementById('p2-date').value;
+            const cityStr = document.getElementById('p2-city').value;
+            const timeStr = document.getElementById('p2-time').value;
+            
+            const [p2y, p2m, p2d] = dateStr.split('-');
+            
+            document.getElementById('partner-loading').style.display = 'block';
+            document.getElementById('partner-result-container').style.display = 'none';
+            document.getElementById('partner-result-container').classList.remove('show-result');
+            
+            const p2Card = window.getPersonalCard(p2d, p2m, parseInt(p2y) + 1); // slight shift so it's not identical if born same day
+            
+            const compatCategoriesList = "Synergy in Love, Fatal Attraction, Soul Communication, Shared Karmic Lessons, Blockages and Tensions, Opportunities for Growth Together, Spiritual Connection";
+
+            const prompt = `You are a highly mystical relationship tarot reader. User 1 is a ${window.userZodiac} holding the card "${window.userCardName}". Their partner is a ${p2z} born ${p2d}/${p2m}/${p2y}, and mathematically drew the card "${p2Card.name}" for today. 
+Choose exactly FOUR (4) relationship aspects that highlight the synergy between their cards from this list: [${compatCategoriesList}].
+
+Provide a substantial paragraph for each analyzing their esoteric compatibility today. Output STRICTLY as raw HTML using exactly this structure for each topic element:
+<h3 class="reading-title" style="margin-top:24px; color:var(--accent-rose);">[The Aspect Name in English]</h3>
+<p class="reading-text">[Your intense esoteric compatibility analysis in English...]</p>
+
+Do NOT put your response in markdown blocks like \`\`\`html. Just output the raw HTML tags directly.`;
+            const resultText = await fetchAIReading(prompt, true);
+            
+            // Populate partner card result
+            document.getElementById('p2-res-symbol').textContent = p2Card.number;
+            document.getElementById('p2-res-name').textContent = p2Card.name;
+            document.getElementById('p2-res-theme').textContent = "Their Energy Today: " + p2Card.theme;
+            document.getElementById('partner-text').innerHTML = resultText;
+            
+            // Set the real card image on the partner drawn-back face
+            const p2BackEl = document.querySelector('#partner-result-container .drawn-back');
+            if (p2Card.image) {
+                p2BackEl.style.backgroundImage = `url('${p2Card.image}')`;
+                p2BackEl.style.backgroundSize = 'cover';
+                p2BackEl.style.backgroundPosition = 'center';
+            }
+            
+            document.getElementById('partner-loading').style.display = 'none';
+            document.getElementById('partner-result-container').style.display = 'block';
+            
+            void document.getElementById('partner-result-container').offsetWidth;
+            document.getElementById('partner-result-container').classList.add('show-result');
+            
+            btn.disabled = false;
+        });
+        
+    </script>
+</body>
+</html>

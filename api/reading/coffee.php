@@ -81,7 +81,7 @@ $prompt = "You are performing a traditional Turkish/Greek coffee cup reading (ta
 
 $result = call_groq($prompt, 'You are FateSpy, an expert tasseography reader (coffee cup divination). Respond ONLY with valid JSON.');
 if (!$result)
-    json_err('AI analysis failed. Please try again.', 503);
+    json_err('AI service is currently unavailable. Please try again later.', 503);
 
 $defaults = [
     'symbols_found' => $selected_symbols,
