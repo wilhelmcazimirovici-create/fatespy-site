@@ -1,0 +1,98 @@
+cheia groq: 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
+
+google cloud oath client client ID: 319772083654-c68509hk8ihp206q9f8u1rqs7783obvj.apps.googleusercontent.com
+client secret: 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
+
+GLM5 key: fw_B1PeZZsKrmhFwzwBQ3Yski
+
+Ești un astrolog experimentat, cald și inspirațional. Scrie un horoscop zilnic pentru zodia {zodie} în română, 180-250 cuvinte. Ton pozitiv, motivant, ușor mistic, cu sfaturi practice. Include: carieră, sănătate, noroc, potrivire de zodie, dragoste. Folosește limbaj poetic dar accesibil. Data de azi: {data}. Nu folosi placeholder-e. Ia in considerare alinierea astrelor de la data de azi.
+
+
+
+
+**Da, absolut! Secțiunea premium cu horoscop personalizat pe baza **natal chart-ului complet** e cea mai bună idee ca să monetizezi site-ul.**  
+Asta transformă site-ul dintr-un simplu horoscop zilnic gratuit într-un tool profesional de astrologie (gen Co-Star sau Astro.com, dar în română și cu AI ultra-personalizat).
+
+### Ce date trebuie să ceară utilizatorul (formular premium)
+**Obligatorii:**
+- Data nașterii: zi/lună/an
+- Ora nașterii (HH:MM) → **foarte important** (fără oră exactă, Ascendentul și casele sunt aproximative)
+- Locul nașterii: oraș + țară (cu autocomplete)
+- Sex/Gender: Masculin / Feminin / Non-binary (influențează nuanțele interpretărilor – ex. energie marțiană mai directă la bărbați etc.)
+
+**Opționale (recomandate):**
+- Nume complet (pentru numerologie)
+- Locație actuală (dacă diferită de cea de naștere – pentru transite locale)
+- Ascendent cunoscut (dacă știe deja)
+
+### Soluția tehnică cea mai bună și mai ieftină în 2026 (recomandarea mea #1)
+**Kerykeion (Python) + Groq/Gemini + caching**
+
+De ce e perfect:
+- 100% gratuit (open-source)
+- Folosește **Swiss Ephemeris** (NASA JPL) – aceeași precizie ca Astro.com
+- Calculează: poziții planete, case (23 sisteme, Placidus default), aspecte, retrograde, Lilith, Chiron, Arabic Parts etc.
+- Generează automat **SVG chart frumos** (îl arăți utilizatorului)
+- Structurat perfect pentru AI (îi dai JSON-ul natal chart + transite curente)
+
+**Flux complet (super rapid):**
+1. User plătește (Stripe/PayU) → primește acces 30 zile / 1 an / lifetime
+2. Completează formularul
+3. Backend:
+   - Geocode oraș → lat/long + timezone (folosești **Nominatim OSM** – gratuit, sau Google Geocoding ieftin)
+   - Kerykeion calculează natal chart + transite de azi
+   - Trimite totul la Groq (sau Gemini Flash) cu prompt detaliat
+4. Primește:
+   - Chart SVG interactiv
+   - Horoscop personalizat lung (500-800 cuvinte) în română
+   - Secțiuni: Dragoste, Carieră, Sănătate, Finanțe, Sfatul zilei, Previziuni săptămână/lună
+   - PDF descărcabil (opțional, cu html-to-pdf)
+
+### Cod exemplu rapid (Python + FastAPI/Flask)
+```python
+from kerykeion import KrInstance, make_svg
+from groq import Groq
+import json
+
+def generate_personalized_horoscope(birth_data):
+    # birth_data = {"name": "...", "day":25, "month":12, "year":1995, "hour":14, "minute":30, "city":"Bucuresti", "lat":44.43, "lng":26.1, "tz":"Europe/Bucharest"}
+    
+    person = KrInstance(**birth_data)
+    person.get_all()                    # calculează totul
+    chart_svg = make_svg(person)        # salvezi ca fișier sau base64
+    
+    data_for_ai = {
+        "natal": person.json(),         # toate pozițiile + aspecte
+        "transits_today": get_transits_today(),  # funcție similară
+        "gender": birth_data["gender"],
+        "current_date": "26 februarie 2026"
+    }
+    
+    client = Groq(api_key="gsk_...")
+    prompt = f"""Ești astrolog profesionist român. Generează un horoscop EXTREM de personalizat...
+    Date natal: {json.dumps(data_for_ai, ensure_ascii=False)}
+    Ton: cald, empatic, motivant, ușor mistic. Folosește numele utilizatorului."""
+    
+    response = client.chat.completions.create(model="llama-3.3-70b-versatile", messages=[{"role":"user", "content":prompt}])
+    return response.choices[0].message.content, chart_svg
+```
+
+### Alternative dacă nu vrei Python în backend
+- **FreeAstroAPI.com** sau **Astrology-API.io** (gratuit 50-1000 calls/lună, apoi 10-50$/lună)
+- **AstrologyAPI.com** (VedicRishi) – au și geo lookup gratuit inclus
+- Acestea returnează direct JSON + uneori SVG + interpretări AI
+
+**Recomandarea finală pentru tine:**
+→ **Kerykeion + Groq** = costuri aproape zero + calitate maximă + control total  
+(perfect pentru un site românesc care vrea să se diferențieze)
+
+Vrei să-ți dau:
+- Cod complet exemplu (FastAPI + React/Next.js frontend)
+- Cum integrezi plata Stripe
+- Exemplu de prompt Groq ultra-eficient
+- Cum faci caching ca să nu plătești nimic la Groq pentru utilizatori recurenți
+
+Spune-mi **ce stack folosești** (Python, Node.js, PHP/Laravel, Next.js etc.) și ți-l fac pe loc, complet funcțional.  
+O să iasă un feature premium de top! ✨
+
+Cât vrei să ceri pe acces? (ex: 29 RON/lună sau 99 RON/an?)
